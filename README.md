@@ -1,8 +1,8 @@
 # .dotfiles
 
-Repository contains files and instructions for configuring:
+Repository contains files and instructions for configuring and installing:
 
-- Node.js & NVM
+- Node.js
 - Deno
 - Go
 - Fish shell
@@ -36,20 +36,12 @@ stow -vt ~ *
 
 ## Tools
 
-#### Node Version Manager
+#### Node.js
 
-[Repository](https://github.com/nvm-sh/nvm)
-
-Install NVM (check for the latest version of the script first):
+Install using [n-install](https://github.com/tj/n) tool:
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-```
-
-Install/Update Node LTS and reinstall packages:
-
-```bash
-nvm install --lts --reinstall-packages-from=current
+curl -L https://git.io/n-install | bash
 ```
 
 #### Deno
@@ -67,12 +59,6 @@ Install using [getgo](https://github.com/golang/tools/tree/master/cmd/getgo) too
 ```bash
 curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && ./go_installer && rm go_installer
 ```
-
-#### Fish plugins
-
-- [Fisher](https://github.com/jorgebucaran/fisher)
-- [Bass](https://github.com/edc/bass)
-- [fish-nvm](https://github.com/FabioAntunes/fish-nvm)
 
 #### SpaceVim
 
