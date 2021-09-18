@@ -1,0 +1,8 @@
+[user]
+	name = Nikita
+	email = lozgachev@posteo.net
+	signingkey = 3F83A8404AF8465A
+[init]
+	defaultBranch = main
+[commit]
+	gpgsign = true
