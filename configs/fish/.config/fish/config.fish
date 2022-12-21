@@ -14,3 +14,4 @@ set -x PATH $PATH $HOME/.cargo/bin
 # MacOS Python
 set -x PATH $PATH /usr/local/opt/python@3.10/bin
 
+set -x PATH $PATH $(pyenv root)/shims
