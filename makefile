@@ -11,7 +11,10 @@ deno:
 	curl -fsSL https://deno.land/x/install/install.sh | sh
 
 go:
-	curl -LO https://get.golang.org/$(uname)/go_installer && chmod +x go_installer && ./go_installer && rm go_installer
+	wget https://git.io/go-installer.sh && bash go-installer.sh
+
+rust:
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 homebrew:
 	bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -29,4 +32,3 @@ setup_common: volta node node_pkgs
 
 setup_macos: homebrew homebrew_pkgs homebrew_fonts setup_common
 
-# migrate to Nix?
