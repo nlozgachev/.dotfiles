@@ -1,18 +1,8 @@
+set CURR_FILE $(status --current-filename)
+set CURR_DIR $(dirname $CURR_FILE)
+set CONFIGS_DIR $CURR_DIR/config
 
-# Volta
-set -x PATH $PATH $HOME/.volta/bin
-
-# Deno
-set -x PATH $PATH $HOME/.deno/bin
-
-# Go
-set -x PATH $PATH $HOME/.go/bin
-set -x PATH $PATH $(go env GOPATH)/bin
-
-# Rust
-set -x PATH $PATH $HOME/.cargo/bin
-
-# MacOS Python
-#set -x PATH $PATH /usr/local/opt/python@3.10/bin
-
-#set -x PATH $PATH $(pyenv root)/shims
+source $CONFIGS_DIR/set_aliases.fish
+source $CONFIGS_DIR/set_path.fish
+source $CONFIGS_DIR/set_shell_vars.fish
+source $CONFIGS_DIR/init_pyenv.fish
