@@ -1,2 +1,2 @@
-alias -s v=$EDITOR
-alias -s vim=$EDITOR
+alias v=$EDITOR
+alias vim=$EDITOR
