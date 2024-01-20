@@ -6,3 +6,5 @@ source $CONFIGS_DIR/set_shell_vars.fish
 source $CONFIGS_DIR/set_aliases.fish
 source $CONFIGS_DIR/set_path.fish
 source $CONFIGS_DIR/init_pyenv.fish
+
+set -gx GOPATH $HOME/go; set -gx GOROOT $HOME/.go; set -gx PATH $GOPATH/bin $PATH; # g-install: do NOT edit, see https://github.com/stefanmaric/g

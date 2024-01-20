@@ -5,8 +5,7 @@ fish_add_path $HOME/.volta/bin
 fish_add_path $HOME/.deno/bin
 
 # Go
-fish_add_path $HOME/.go/bin
-# fish_add_path $(go env GOPATH)/bin
+fish_add_path $HOME/go/bin
 
 # Rust
 fish_add_path $HOME/.cargo/bin
@@ -16,3 +15,6 @@ fish_add_path $HOME/.cargo/bin
 
 # Linux Python
 fish_add_path $HOME/.pyenv/bin $PATH
+
+fish_add_path $HOME/bin
+
