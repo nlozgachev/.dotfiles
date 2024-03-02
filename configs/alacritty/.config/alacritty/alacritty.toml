@@ -69,7 +69,7 @@ multiplier = 3
 save_to_clipboard = false
 
 [shell]
-program = "/usr/bin/fish"
+program = "/opt/homebrew/bin/fish"
 
 [window.class]
 general = "Alacritty"
