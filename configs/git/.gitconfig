@@ -1,10 +1,12 @@
 [user]
-	name = Nikita
-	email = lozgachev@posteo.net
-	signingkey = 7B4A46D49032476B
+	name = Nikita Lozgachev
+	email = code@lozgachev.dev
+	signingkey = CB68C5C70C86D6CC49BD2D5709F526D820034C7B
 [init]
 	defaultBranch = main
 [commit]
 	gpgsign = true
 [gpg]
 	program = gpg
+[alias]
+  adog = log --all --decorate --oneline --graph
