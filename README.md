@@ -1,30 +1,16 @@
 # .dotfiles
 
-Repository contains files and instructions for configuring and installing:
-
-## Toolchain
-
-- Node.js
-- Deno
-- Rust
-- Go
-- Fish shell
-- Git
-- Fonts
+Repository contains files and instructions for configuring and installing tools for software development on my MacOS.
 
 ## Usage
 
-To setup configs:
+To setup configs go to [configs](./configs) directory and run:
 
 ```bash
 stow -vt ~ *
 ```
 
-To install specific tools using makefile:
+To install tools run scripts from [scripts](./scripts) directory:
 
-```bash
-make <CMD_NAME>
-
-# to install everything necessary for development in MacOS
-make setup_macos
-```
+- [setup_tools.sh](./scripts/setup_tools.sh) - install languages.
+- [setup_fonts.sh](./scripts/setup_fonts.sh) - install fonts.
