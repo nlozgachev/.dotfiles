@@ -11,14 +11,3 @@ fnm env --use-on-cd | source
 # tabtab source for packages
 # uninstall by removing these lines
 [ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true
-
-
-# pnpm
-set -gx PNPM_HOME "/Users/nlozgachev/Library/pnpm"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
-end
-# pnpm end
-
-source /opt/homebrew/opt/asdf/libexec/asdf.fish
-source ~/.asdf/plugins/golang/set-env.fish
