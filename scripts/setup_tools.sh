@@ -65,17 +65,6 @@ else
 		done
 fi
 
-error_exit() {
-		echo "Error: $1" >&2
-		exit 1
-}
-
-check_success() {
-		if ! "$@"; then
-				error_exit "Failed to execute: $*"
-		fi
-}
-
 echo "Installing dependencies..."
 check_success brew install curl git asdf
 
