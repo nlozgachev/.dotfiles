@@ -11,3 +11,5 @@ fish_add_path $PNPM_HOME
 
 source /opt/homebrew/opt/asdf/libexec/asdf.fish
 source ~/.asdf/plugins/golang/set-env.fish
+source ~/.asdf/plugins/java/set-java-home.fish
+
