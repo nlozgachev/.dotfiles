@@ -14,3 +14,9 @@ fnm env --use-on-cd | source
 
 source /opt/homebrew/opt/asdf/libexec/asdf.fish
 source ~/.asdf/plugins/golang/set-env.fish
+# pnpm
+set -gx PNPM_HOME "/Users/nlozgachev/.pnpm-global"
+if not string match -q -- $PNPM_HOME $PATH
+  set -gx PATH "$PNPM_HOME" $PATH
+end
+# pnpm end

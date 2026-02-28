@@ -1,0 +1,63 @@
+{
+  "edit_predictions": {
+    "mode": "eager",
+  },
+  "agent": {
+    "profiles": {
+      "plan": {
+        "name": "Plan",
+        "tools": {},
+        "enable_all_context_servers": false,
+        "context_servers": {},
+      },
+    },
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4.5",
+    },
+    "favorite_models": [
+      {
+        "provider": "copilot_chat",
+        "model": "claude-sonnet-4.5",
+        "enable_thinking": false,
+      },
+    ],
+    "model_parameters": [],
+  },
+  "debugger": {
+    "dock": "left",
+  },
+  "git_panel": {
+    "tree_view": true,
+    "sort_by_path": true,
+    "dock": "right",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "collaboration_panel": {
+    "button": false,
+  },
+  "buffer_font_family": "Iosevka",
+  "buffer_font_features": {
+    "liga": true,
+    "calt": true,
+  },
+  "terminal": {
+    "font_family": "Iosevka Term",
+    "blinking": "off",
+  },
+  "ui_font_size": 14,
+  "buffer_font_size": 14,
+  "theme": {
+    "mode": "light",
+    "light": "Concrete Light",
+    "dark": "Concrete Dark",
+  },
+  "project_panel": {
+    "button": true,
+    "dock": "right",
+    "git_status": true,
+  },
+}
