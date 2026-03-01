@@ -1,6 +1,6 @@
 # .dotfiles
 
-macOS developer configuration for [fish](https://fishshell.com), [git](https://git-scm.com), [helix](https://helix-editor.com), [tmux](https://github.com/tmux/tmux), [rio](https://raphamorim.io/rio), and [zed](https://zed.dev).
+macOS developer configuration for [fish](https://fishshell.com), [git](https://git-scm.com), [helix](https://helix-editor.com), [tmux](https://github.com/tmux/tmux), [rio](https://rioterm.com), and [zed](https://zed.dev).
 
 Managed with [stow](https://www.gnu.org/software/stow/) and [just](https://just.systems).
 
