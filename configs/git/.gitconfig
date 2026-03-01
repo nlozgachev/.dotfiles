@@ -1,12 +1,35 @@
 [user]
 	name = Nikita Lozgachev
-	email = code@lozgachev.dev
-	signingkey = CB68C5C70C86D6CC49BD2D5709F526D820034C7B
 [init]
 	defaultBranch = main
+[core]
+	editor = hx
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
 [commit]
 	gpgsign = true
 [gpg]
 	program = gpg
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[fetch]
+	prune = true
+[diff]
+	algorithm = histogram
+[merge]
+	conflictstyle = zdiff3
+[rebase]
+	autoStash = true
+[branch]
+	sort = -committerdate
 [alias]
-  adog = log --all --decorate --oneline --graph
+	adog = log --all --decorate --oneline --graph
+[include]
+	path = ~/.gitconfig-local

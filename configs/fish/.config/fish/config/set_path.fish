@@ -6,10 +6,11 @@ fish_add_path $HOME/.bin
 # Rust
 fish_add_path $HOME/.cargo/bin
 
-# PNPM
+# pnpm
 fish_add_path $PNPM_HOME
 
+# asdf version manager
 source /opt/homebrew/opt/asdf/libexec/asdf.fish
-source ~/.asdf/plugins/golang/set-env.fish
-source ~/.asdf/plugins/java/set-java-home.fish
 
+# Go environment (via asdf-golang plugin)
+source ~/.asdf/plugins/golang/set-env.fish

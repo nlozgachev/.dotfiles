@@ -1,22 +1,11 @@
-set CURR_FILE (status --current-filename)
-set CURR_DIR (dirname $CURR_FILE)
-set CONFIGS_DIR $CURR_DIR/config
+set -l config_dir (dirname (status --current-filename))/config
 
-source $CONFIGS_DIR/set_shell_vars.fish
-source $CONFIGS_DIR/set_aliases.fish
-source $CONFIGS_DIR/set_path.fish
+source $config_dir/set_shell_vars.fish
+source $config_dir/set_aliases.fish
+source $config_dir/set_path.fish
 
-fnm env --use-on-cd | source
-
-# tabtab source for packages
-# uninstall by removing these lines
-[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true
-
-source /opt/homebrew/opt/asdf/libexec/asdf.fish
-source ~/.asdf/plugins/golang/set-env.fish
-# pnpm
-set -gx PNPM_HOME "/Users/nlozgachev/.pnpm-global"
-if not string match -q -- $PNPM_HOME $PATH
-  set -gx PATH "$PNPM_HOME" $PATH
+# Machine-specific config: env vars, secrets, work tools (not tracked in repo)
+# See README for details
+if test -f ~/.config/fish/local.fish
+    source ~/.config/fish/local.fish
 end
-# pnpm end

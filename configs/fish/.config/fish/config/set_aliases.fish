@@ -5,7 +5,6 @@ alias g="git"
 alias ga="git add"
 alias gaa="git add --all"
 alias gc="git commit -m"
-alias gcm="git commit -m"
 alias gcam="git commit -am"
 alias gst="git status"
 alias gd="git diff"
@@ -28,8 +27,6 @@ alias grh="git reset --hard"
 alias gcp="git cherry-pick"
 alias gbl="git blame"
 alias glf="git log --pretty=format:'%h - %an, %ar : %s'"
-
-# alias dev="just --justfile ~/.config/tmux/justfile dev"
 
 abbr pn pnpm
 abbr pnd pnpm dev

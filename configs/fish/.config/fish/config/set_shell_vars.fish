@@ -1,4 +1,4 @@
-set -U fish_greeting
+set -g fish_greeting ""
 
 set -gx EDITOR hx
 set -gx TERM xterm-256color
