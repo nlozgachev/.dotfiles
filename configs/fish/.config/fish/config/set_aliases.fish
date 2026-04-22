@@ -32,3 +32,10 @@ abbr pn pnpm
 abbr pnd pnpm dev
 abbr pns pnpm storybook
 abbr pnt pnpm test:dev
+
+alias ls="eza --icons"
+alias ll="eza -la --icons --git"
+alias lt="eza --tree --icons"
+alias cat="bat"
+alias find="fd"
+alias lg="lazygit"

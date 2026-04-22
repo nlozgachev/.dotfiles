@@ -1,6 +1,6 @@
 # .dotfiles
 
-macOS developer configuration for [fish](https://fishshell.com), [git](https://git-scm.com), [helix](https://helix-editor.com), [tmux](https://github.com/tmux/tmux), [rio](https://rioterm.com), and [zed](https://zed.dev).
+macOS developer configuration for [fish](https://fishshell.com), [git](https://git-scm.com), [helix](https://helix-editor.com), [tmux](https://github.com/tmux/tmux), [rio](https://rioterm.com), [zed](https://zed.dev), and [Claude Code](https://claude.ai/code).
 
 Managed with [stow](https://www.gnu.org/software/stow/) and [just](https://just.systems).
 
@@ -8,6 +8,7 @@ Managed with [stow](https://www.gnu.org/software/stow/) and [just](https://just.
 
 ```
 configs/          stow packages — each mirrors ~/
+├── claude/       Claude Code settings
 ├── fish/         fish shell
 ├── git/          git
 ├── rio/          rio terminal
@@ -64,7 +65,7 @@ Loaded automatically at the end of `config.fish`. This file should never be comm
 
 ## Languages
 
-Installed via [asdf](https://asdf-vm.com) (Node, Deno, Go, Rust) and [uv](https://docs.astral.sh/uv) (Python):
+Installed via [mise](https://mise.jdx.dev) (Node, Deno, Go) and [uv](https://docs.astral.sh/uv) (Python):
 
 ```sh
 just node      # Node.js LTS + pnpm
@@ -74,6 +75,23 @@ just python    # Python (latest, via uv)
 just rust      # Rust (via rustup)
 just langs     # all of the above
 ```
+
+## Claude Code
+
+Install Claude Code and plugins:
+
+```sh
+just claude
+```
+
+This installs Claude Code via the official installer, then adds:
+- **superpowers** — agentic workflows, TDD, debugging, planning skills
+- **claude-mem** — cross-session persistent memory
+- **caveman** — compressed communication mode
+
+Claude config (`settings.json`) is tracked in `configs/claude/` and symlinked via stow.
+
+> **Note:** If `~/.claude/settings.json` already exists, remove it before running `just link` so stow can create the symlink.
 
 ## All tasks
 

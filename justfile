@@ -25,7 +25,8 @@ setup: packages fonts link
 
 # Install required packages
 packages:
-    brew install just git git-delta fish stow asdf helix uv
+    brew install just git git-delta fish stow mise helix uv \
+        lazygit fd ripgrep bat eza fzf
 
 # Install fonts
 fonts:
@@ -33,29 +34,20 @@ fonts:
 
 # ── Languages ─────────────────────────────────────────────────────────────────
 
-# Install Node.js LTS + pnpm via corepack (asdf)
+# Install Node.js LTS + pnpm via corepack (mise)
 node:
-    #!/bin/sh
-    asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git || true
-    asdf cmd nodejs update-nodebuild
-    NODE_LTS=$(asdf cmd nodejs resolve lts)
-    asdf install nodejs "$NODE_LTS"
-    asdf global nodejs "$NODE_LTS"
+    mise use -g node@lts
     corepack enable
     corepack prepare pnpm@latest --activate
-    asdf reshim nodejs
+    mise reshim
 
-# Install Deno (asdf)
+# Install Deno (mise)
 deno:
-    -asdf plugin add deno https://github.com/asdf-community/asdf-deno.git
-    asdf install deno latest
-    asdf global deno latest
+    mise use -g deno@latest
 
-# Install Go (asdf)
+# Install Go (mise)
 go:
-    -asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-    asdf install golang latest
-    asdf global golang latest
+    mise use -g go@latest
 
 # Install latest Python (uv)
 python:
@@ -71,36 +63,26 @@ langs: node deno go python rust
 
 # ── Updates ───────────────────────────────────────────────────────────────────
 
-# Update all asdf plugins
-update-plugins:
-    asdf plugin update --all
+# Update mise itself
+update-mise:
+    mise self-update
 
 # Update Node.js to latest LTS + pnpm
 update-node:
-    #!/bin/sh
-    asdf plugin update nodejs
-    asdf cmd nodejs update-nodebuild
-    NODE_LTS=$(asdf cmd nodejs resolve lts)
-    asdf install nodejs "$NODE_LTS"
-    asdf global nodejs "$NODE_LTS"
+    mise use -g node@lts
     corepack prepare pnpm@latest --activate
-    asdf reshim nodejs
+    mise reshim
 
 # Update Deno to latest
 update-deno:
-    asdf plugin update deno
-    asdf install deno latest
-    asdf global deno latest
+    mise use -g deno@latest
 
 # Update Go to latest
 update-go:
-    asdf plugin update golang
-    asdf install golang latest
-    asdf global golang latest
+    mise use -g go@latest
 
 # Update uv itself and install latest Python
 update-python:
-    uv self update
     uv python install
 
 # Update Rust toolchain
@@ -113,8 +95,27 @@ update-brew:
     brew upgrade
     brew cleanup
 
+# Update Claude Code
+update-claude:
+    claude update
+
 # Update everything
-update: update-plugins update-node update-deno update-go update-python update-rust update-brew
+update: update-mise update-node update-deno update-go update-python update-rust update-brew update-claude
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+
+# Install Claude Code
+claude-install:
+    curl -fsSL https://claude.ai/install.sh | bash
+
+# Install Claude Code plugins
+claude-plugins:
+    claude plugin marketplace add obra/superpowers-marketplace && claude plugin install superpowers@superpowers-marketplace
+    claude plugin marketplace add thedotmack/claude-mem && claude plugin install claude-mem
+    claude plugin marketplace add JuliusBrussee/caveman && claude plugin install caveman@caveman
+
+# Full Claude setup: install + plugins
+claude: claude-install claude-plugins
 
 # ── GPG ───────────────────────────────────────────────────────────────────────
 

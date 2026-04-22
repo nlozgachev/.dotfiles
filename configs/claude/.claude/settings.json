@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:app.unpkg.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  },
+  "enabledPlugins": {
+    "claude-mem@thedotmack": true,
+    "caveman@caveman": true,
+    "superpowers@superpowers-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    }
+  },
+  "effortLevel": "max"
+}
