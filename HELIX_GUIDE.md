@@ -139,7 +139,8 @@ Once text is selected:
 | `P` | Paste before | Pastes copied text before cursor/selection |
 | `u` | Undo | Reverts previous change |
 | `U` | Redo | Reapplies undone change |
-| `Ctrl + c` | Toggle comment | Comments or uncomments selected lines |
+| `Ctrl + c` / `Space + c` | Toggle line comment | Comments or uncomments selected lines with `//` |
+| `Space + C` | Toggle block comment | Wraps selected lines/block in `/* ... */` |
 | `>` / `<` | Indent / unindent | Shifts selected lines right or left |
 
 ---
@@ -245,7 +246,7 @@ Format on save is enabled. Pressing `Ctrl + s` (or running `:w`) formats the buf
 
 | Language | LSP | Formatter |
 | :--- | :--- | :--- |
-| TypeScript / JavaScript | `oxlint`, `typescript-language-server` | `oxfmt` |
+| TypeScript / JavaScript | `oxlint`, `vtsls` | `oxfmt` |
 | HTML / CSS / JSON | `vscode-langservers-extracted` | `oxfmt` |
 | Markdown / YAML | Built-in Tree-Sitter, `yaml-language-server` | `oxfmt` |
 | Python | `pyright`, `ruff` | `ruff` |
