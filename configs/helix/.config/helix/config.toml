@@ -22,8 +22,12 @@ true-color = true
 # Automatically remove trailing whitespace on save
 trim-trailing-whitespace = true
 
+# Automatically continue comments on Enter
+continue-comments = true
+
 # Instant autocomplete popup
 completion-trigger-len = 1
+completion-timeout = 5
 
 # Cursor shapes
 [editor.cursor-shape]

@@ -5,11 +5,42 @@
 command = "oxlint"
 args = ["--lsp"]
 
-# TypeScript Language Server: types, autocomplete, goto definition, symbols
-[language-server.typescript-language-server]
-command = "typescript-language-server"
+# Vtsls: high-performance TypeScript/JavaScript LSP powered by VSCode's TypeScript extension
+[language-server.vtsls]
+command = "vtsls"
 args = ["--stdio"]
-config = { documentFormatting = false }
+
+[language-server.vtsls.config.vtsls]
+autoUseWorkspaceTsdk = true
+experimental.completion.enableServerSideFuzzyMatch = true
+
+[language-server.vtsls.config.typescript.suggest]
+completeFunctionCalls = true
+localityBonus = true
+completeJSDocs = true
+jsdoc = { generateReturns = true }
+
+[language-server.vtsls.config.javascript.suggest]
+completeFunctionCalls = true
+localityBonus = true
+completeJSDocs = true
+jsdoc = { generateReturns = true }
+
+[language-server.vtsls.config.typescript.inlayHints]
+parameterNames.enabled = "literals"
+parameterTypes.enabled = true
+variableTypes.enabled = true
+propertyDeclarationTypes.enabled = true
+functionLikeReturnTypes.enabled = true
+enumMemberValues.enabled = true
+
+[language-server.vtsls.config.javascript.inlayHints]
+parameterNames.enabled = "literals"
+parameterTypes.enabled = true
+variableTypes.enabled = true
+propertyDeclarationTypes.enabled = true
+functionLikeReturnTypes.enabled = true
+enumMemberValues.enabled = true
 
 # VSCode Extracted Language Servers (HTML, CSS, JSON)
 [language-server.vscode-html-language-server]
@@ -51,33 +82,33 @@ args = ["--stdio"]
 # TypeScript
 [[language]]
 name = "typescript"
-language-servers = ["typescript-language-server", "oxlint"]
+language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # TSX
 [[language]]
 name = "tsx"
-language-servers = ["typescript-language-server", "oxlint"]
+language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JavaScript
 [[language]]
 name = "javascript"
-language-servers = ["typescript-language-server", "oxlint"]
+language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JSX
 [[language]]
 name = "jsx"
-language-servers = ["typescript-language-server", "oxlint"]
+language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # HTML
@@ -85,7 +116,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "html"
 language-servers = ["vscode-html-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # CSS
@@ -93,7 +124,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "css"
 language-servers = ["vscode-css-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # SCSS
@@ -101,7 +132,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "scss"
 language-servers = ["vscode-css-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JSON
@@ -109,7 +140,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "json"
 language-servers = ["vscode-json-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # Go
@@ -148,7 +179,7 @@ indent = { tab-width = 4, unit = "    " }
 name = "markdown"
 language-servers = ["marksman"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # TOML
@@ -162,5 +193,5 @@ indent = { tab-width = 2, unit = "  " }
 name = "yaml"
 language-servers = ["yaml-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
 indent = { tab-width = 2, unit = "  " }

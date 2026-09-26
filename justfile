@@ -47,7 +47,7 @@ node:
 
 # Install frontend tools and LSPs for Helix (oxlint, oxfmt, TypeScript LSP, web LSPs)
 frontend:
-    pnpm add -g oxlint oxfmt typescript typescript-language-server vscode-langservers-extracted yaml-language-server
+    npm add -g oxlint oxfmt typescript@5 typescript-language-server vscode-langservers-extracted yaml-language-server
 
 # Install Deno (mise)
 deno:

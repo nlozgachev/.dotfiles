@@ -1,5 +1,5 @@
 # Global tool fallbacks (used outside projects and by editor LSPs)
 # Specific versions for projects should be defined in each repo's mise.toml
 [tools]
-node = "lts"
+node = "24"
 pnpm = "latest"
