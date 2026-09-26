@@ -124,10 +124,10 @@ hint = { fg = "cyan" }
 "ui.text.info" = { bg = "dark_navy", fg = "cyan" }
 "ui.text.directory" = { fg = "blue" }
 "ui.virtual.ruler" = { bg = "line" }
-"ui.virtual.whitespace" = { fg = "line" }
+"ui.virtual.whitespace" = { fg = "guide" }
 "ui.virtual.inlay-hint" = { fg = "comment" }
 "ui.virtual.jump-label" = { fg = "yellow", modifiers = ["bold"] }
-"ui.virtual.indent-guide" = { fg = "line" }
+"ui.virtual.indent-guide" = { fg = "guide" }
 "ui.window" = { fg = "line" }
 
 [palette]
@@ -135,6 +135,7 @@ background = "#002451"
 dark_navy  = "#001b3d"
 line       = "#00346e"
 selection  = "#003f8e"
+guide      = "#416294"
 foreground = "#ffffff"
 comment    = "#7285b7"
 red        = "#ff9da4"
