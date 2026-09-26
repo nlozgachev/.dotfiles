@@ -39,11 +39,10 @@ fonts:
 
 # ── Languages & Dev Tooling ───────────────────────────────────────────────────
 
-# Install Node.js LTS + pnpm via corepack (mise)
+# Install Node.js LTS + standalone pnpm (mise)
 node:
     mise use -g node@lts
-    corepack enable
-    corepack prepare pnpm@latest --activate
+    mise use -g pnpm@latest
     mise reshim
 
 # Install frontend tools and LSPs for Helix (oxlint, oxfmt, TypeScript LSP, web LSPs)
@@ -84,7 +83,7 @@ update-mise:
 # Update Node.js to latest LTS + pnpm
 update-node:
     mise use -g node@lts
-    corepack prepare pnpm@latest --activate
+    mise use -g pnpm@latest
     mise reshim
 
 # Update frontend dev tools

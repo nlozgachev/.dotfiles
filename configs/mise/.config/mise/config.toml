@@ -2,3 +2,4 @@
 # Specific versions for projects should be defined in each repo's mise.toml
 [tools]
 node = "lts"
+pnpm = "latest"

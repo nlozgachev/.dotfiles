@@ -19,6 +19,9 @@ auto-info = true
 line-number = "relative"
 true-color = true
 
+# Automatically remove trailing whitespace on save
+trim-trailing-whitespace = true
+
 # Instant autocomplete popup
 completion-trigger-len = 1
 
@@ -38,6 +41,22 @@ render = true
 character = "│"
 skip-levels = 1
 
+# Whitespace rendering (matches VSCode "editor.renderWhitespace": "all")
+[editor.whitespace.render]
+space = "all"
+tab = "all"
+nbsp = "all"
+nnbsp = "all"
+newline = "none"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "▢"
+nnbsp = "␣"
+tab = "→"
+newline = "⏎"
+tabpad = "·"
+
 # LSP integration
 [editor.lsp]
 display-messages = true
@@ -50,7 +69,15 @@ goto-reference-include-declaration = false
 [editor.statusline]
 left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator"]
 center = []
-right = ["diagnostics", "selections", "register", "position", "file-encoding", "file-line-ending", "file-type"]
+right = [
+  "diagnostics",
+  "selections",
+  "register",
+  "position",
+  "file-encoding",
+  "file-line-ending",
+  "file-type",
+]
 separator = "│"
 
 # Gutters
