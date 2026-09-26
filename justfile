@@ -4,13 +4,13 @@ default:
 
 # ── Config symlinks ───────────────────────────────────────────────────────────
 
-# Symlink all configs to ~ using stow
+# Symlink configs to ~ using stow
 link:
-    cd configs && stow -vt ~ *
+    cd configs && stow -vt ~ fish ghostty git helix mise tmux
 
-# Remove all config symlinks
+# Remove config symlinks
 unlink:
-    cd configs && stow -Dt ~ *
+    cd configs && stow -Dt ~ fish ghostty git helix mise tmux
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 
@@ -18,21 +18,26 @@ unlink:
 brew:
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+# Install mise via official standalone script (brew has outdated versions)
+mise-install:
+    curl -fsSL https://mise.run | sh
+    ~/.local/bin/mise completion fish > configs/fish/.config/fish/completions/mise.fish
+
 # Install packages, fonts, and symlink configs
-setup: packages fonts link
+setup: mise-install packages fonts link
 
 # ── Homebrew packages ─────────────────────────────────────────────────────────
 
-# Install required packages
+# Install required packages and CLI tools
 packages:
-    brew install just git git-delta fish stow mise helix uv \
-        lazygit fd ripgrep bat eza fzf
+    brew install just git git-delta fish stow helix uv \
+        lazygit fd ripgrep bat eza fzf taplo
 
 # Install fonts
 fonts:
     brew install --cask font-iosevka-nerd-font font-iosevka-term-nerd-font
 
-# ── Languages ─────────────────────────────────────────────────────────────────
+# ── Languages & Dev Tooling ───────────────────────────────────────────────────
 
 # Install Node.js LTS + pnpm via corepack (mise)
 node:
@@ -41,37 +46,50 @@ node:
     corepack prepare pnpm@latest --activate
     mise reshim
 
+# Install frontend tools and LSPs for Helix (oxlint, oxfmt, TypeScript LSP, web LSPs)
+frontend:
+    pnpm add -g oxlint oxfmt typescript typescript-language-server vscode-langservers-extracted yaml-language-server
+
 # Install Deno (mise)
 deno:
     mise use -g deno@latest
 
-# Install Go (mise)
+# Install Go (mise) + gopls
 go:
     mise use -g go@latest
+    go install golang.org/x/tools/gopls@latest
 
-# Install latest Python (uv)
+# Install latest Python (uv) + ruff & pyright
 python:
     uv python install
+    uv tool install ruff
+    uv tool install pyright
 
-# Install Rust (rustup)
+# Install Rust (rustup) + rust-analyzer
 rust:
     brew install rustup
     rustup-init -y
+    rustup component add rust-analyzer rustfmt
 
-# Install all languages
-langs: node deno go python rust
+# Install all languages and tooling
+langs: node frontend deno go python rust
 
 # ── Updates ───────────────────────────────────────────────────────────────────
 
 # Update mise itself
 update-mise:
     mise self-update
+    mise completion fish > configs/fish/.config/fish/completions/mise.fish
 
 # Update Node.js to latest LTS + pnpm
 update-node:
     mise use -g node@lts
     corepack prepare pnpm@latest --activate
     mise reshim
+
+# Update frontend dev tools
+update-frontend:
+    pnpm update -g oxlint oxfmt typescript typescript-language-server vscode-langservers-extracted yaml-language-server
 
 # Update Deno to latest
 update-deno:
@@ -95,27 +113,8 @@ update-brew:
     brew upgrade
     brew cleanup
 
-# Update Claude Code
-update-claude:
-    claude update
-
 # Update everything
-update: update-mise update-node update-deno update-go update-python update-rust update-brew update-claude
-
-# ── Claude Code ───────────────────────────────────────────────────────────────
-
-# Install Claude Code
-claude-install:
-    curl -fsSL https://claude.ai/install.sh | bash
-
-# Install Claude Code plugins
-claude-plugins:
-    claude plugin marketplace add obra/superpowers-marketplace && claude plugin install superpowers@superpowers-marketplace
-    claude plugin marketplace add thedotmack/claude-mem && claude plugin install claude-mem
-    claude plugin marketplace add JuliusBrussee/caveman && claude plugin install caveman@caveman
-
-# Full Claude setup: install + plugins
-claude: claude-install claude-plugins
+update: update-mise update-node update-frontend update-deno update-go update-python update-rust update-brew
 
 # ── GPG ───────────────────────────────────────────────────────────────────────
 

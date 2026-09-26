@@ -1,0 +1,86 @@
+# ── Theme ─────────────────────────────────────────────────────────────────────
+theme = "tomorrow_night_blue"
+
+# ── Editor Settings ───────────────────────────────────────────────────────────
+[editor]
+# Global format on save for all languages with a configured formatter or LSP
+auto-format = true
+
+# Full mouse support (click to position, click-and-drag select, scroll wheel)
+mouse = true
+
+# Tab bufferline always visible across the top (VSCode style)
+bufferline = "always"
+
+# Visual helpers
+cursorline = true
+color-modes = true
+auto-info = true
+line-number = "relative"
+true-color = true
+
+# Instant autocomplete popup
+completion-trigger-len = 1
+
+# Cursor shapes
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+# File picker
+[editor.file-picker]
+hidden = false
+
+# Indent guides
+[editor.indent-guides]
+render = true
+character = "│"
+skip-levels = 1
+
+# LSP integration
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+auto-signature-help = true
+snippets = true
+goto-reference-include-declaration = false
+
+# Statusline
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator"]
+center = []
+right = ["diagnostics", "selections", "register", "position", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+
+# Gutters
+[editor.gutters]
+layout = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"]
+
+# ── Keybindings ───────────────────────────────────────────────────────────────
+
+[keys.normal]
+# VSCode-familiar navigation & shortcuts
+C-p = "file_picker"
+C-s = ":write"
+"tab" = ":buffer-next"
+"S-tab" = ":buffer-previous"
+C-c = "toggle_comments"
+A-x = "command_palette"
+A-w = ":buffer-close"
+F12 = "goto_definition"
+F2 = "rename_symbol"
+S-F12 = "goto_reference"
+
+[keys.normal.g]
+# g + n / g + p for buffer switching
+n = ":buffer-next"
+p = ":buffer-previous"
+
+[keys.insert]
+# Save & auto-format directly from insert mode
+C-s = ":write"
+C-c = "toggle_comments"
+
+[keys.select]
+C-c = "toggle_comments"

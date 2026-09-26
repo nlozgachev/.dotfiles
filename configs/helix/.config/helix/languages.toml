@@ -1,0 +1,150 @@
+# ── Language Servers ──────────────────────────────────────────────────────────
+
+# Oxlint: high-performance JavaScript / TypeScript linter LSP
+[language-server.oxlint]
+command = "oxlint"
+args = ["--lsp"]
+
+# TypeScript Language Server: types, autocomplete, goto definition, symbols
+[language-server.typescript-language-server]
+command = "typescript-language-server"
+args = ["--stdio"]
+config = { documentFormatting = false }
+
+# VSCode Extracted Language Servers (HTML, CSS, JSON)
+[language-server.vscode-html-language-server]
+command = "vscode-html-language-server"
+args = ["--stdio"]
+config = { provideFormatter = false }
+
+[language-server.vscode-css-language-server]
+command = "vscode-css-language-server"
+args = ["--stdio"]
+config = { provideFormatter = false }
+
+[language-server.vscode-json-language-server]
+command = "vscode-json-language-server"
+args = ["--stdio"]
+config = { provideFormatter = false }
+
+# Python: Ruff (fast linter and formatter) + Pyright (type checking)
+[language-server.ruff]
+command = "ruff"
+args = ["server"]
+
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+
+# Markdown: Marksman
+[language-server.marksman]
+command = "marksman"
+args = ["server"]
+
+# YAML: yaml-language-server
+[language-server.yaml-language-server]
+command = "yaml-language-server"
+args = ["--stdio"]
+
+# ── Language Configurations & Format-on-Save ──────────────────────────────────
+
+# TypeScript
+[[language]]
+name = "typescript"
+language-servers = ["typescript-language-server", "oxlint"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# TSX
+[[language]]
+name = "tsx"
+language-servers = ["typescript-language-server", "oxlint"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# JavaScript
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server", "oxlint"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# JSX
+[[language]]
+name = "jsx"
+language-servers = ["typescript-language-server", "oxlint"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# HTML
+[[language]]
+name = "html"
+language-servers = ["vscode-html-language-server"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# CSS
+[[language]]
+name = "css"
+language-servers = ["vscode-css-language-server"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# SCSS
+[[language]]
+name = "scss"
+language-servers = ["vscode-css-language-server"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# JSON
+[[language]]
+name = "json"
+language-servers = ["vscode-json-language-server"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# Go
+[[language]]
+name = "go"
+auto-format = true
+
+# Java
+[[language]]
+name = "java"
+auto-format = true
+
+# Python
+[[language]]
+name = "python"
+language-servers = ["ruff", "pyright"]
+auto-format = true
+
+# Swift
+[[language]]
+name = "swift"
+auto-format = true
+
+# Rust
+[[language]]
+name = "rust"
+auto-format = true
+
+# Markdown
+[[language]]
+name = "markdown"
+language-servers = ["marksman"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }
+
+# TOML
+[[language]]
+name = "toml"
+auto-format = true
+
+# YAML
+[[language]]
+name = "yaml"
+language-servers = ["yaml-language-server"]
+auto-format = true
+formatter = { command = "oxfmt", args = ["--stdin-filepath", "%{filename}"] }

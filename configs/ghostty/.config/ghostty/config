@@ -1,0 +1,15 @@
+# Font
+font-family = Maple Mono
+font-size = 14
+
+# Colors
+theme = Tomorrow Night Blue
+
+# Window
+window-padding-x = 0
+window-padding-y = 0
+
+# Keybindings
+keybind = super+n=new_window
+keybind = super+f=toggle_fullscreen
+keybind = shift+enter=text:\n

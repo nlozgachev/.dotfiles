@@ -7,6 +7,9 @@ fish_add_path $HOME/.local/bin
 # Rust
 fish_add_path $HOME/.cargo/bin
 
+# Go
+fish_add_path $HOME/go/bin
+
 # pnpm
 fish_add_path $PNPM_HOME
 
