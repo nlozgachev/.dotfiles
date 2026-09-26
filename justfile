@@ -45,9 +45,9 @@ node:
     mise use -g pnpm@latest
     mise reshim
 
-# Install frontend tools and LSPs for Helix (oxlint, oxfmt, TypeScript LSP, web LSPs)
+# Install frontend tools and LSPs for Helix (oxlint, oxfmt, vtsls TypeScript LSP, web LSPs)
 frontend:
-    npm add -g oxlint oxfmt typescript@5 typescript-language-server vscode-langservers-extracted yaml-language-server
+    npm add -g oxlint oxfmt typescript@5 @vtsls/language-server vscode-langservers-extracted yaml-language-server
 
 # Install Deno (mise)
 deno:
@@ -88,7 +88,7 @@ update-node:
 
 # Update frontend dev tools
 update-frontend:
-    pnpm update -g oxlint oxfmt typescript typescript-language-server vscode-langservers-extracted yaml-language-server
+    npm update -g oxlint oxfmt typescript @vtsls/language-server vscode-langservers-extracted yaml-language-server
 
 # Update Deno to latest
 update-deno:
