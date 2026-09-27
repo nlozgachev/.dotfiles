@@ -13,3 +13,9 @@ window-padding-y = 0
 keybind = super+n=new_window
 keybind = super+f=toggle_fullscreen
 keybind = shift+enter=text:\n
+
+keybind = super+s=text:\x13
+keybind = super+p=text:\x10
+keybind = super+/=text:\x03
+keybind = super+shift+p=text:\x1bx
+keybind = super+shift+f=text:\x20/

@@ -91,9 +91,11 @@ layout = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"]
 # ── Keybindings ───────────────────────────────────────────────────────────────
 
 [keys.normal]
-# VSCode-familiar navigation & shortcuts
+# VSCode-familiar navigation & shortcuts (supports both Ctrl and macOS Cmd)
 C-p = "file_picker"
+"Cmd-p" = "file_picker"
 C-s = ":write"
+"Cmd-s" = ":write"
 "tab" = ":buffer-next"
 "S-tab" = ":buffer-previous"
 C-c = "toggle_comments"
@@ -111,6 +113,7 @@ p = ":buffer-previous"
 [keys.insert]
 # Save & auto-format directly from insert mode
 C-s = ":write"
+"Cmd-s" = ":write"
 C-c = "toggle_comments"
 
 [keys.select]

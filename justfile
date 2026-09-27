@@ -6,11 +6,11 @@ default:
 
 # Symlink configs to ~ using stow
 link:
-    cd configs && stow -vt ~ fish ghostty git helix mise tmux
+    cd configs && stow -vt ~ fish ghostty git gitui helix mise tmux
 
 # Remove config symlinks
 unlink:
-    cd configs && stow -Dt ~ fish ghostty git helix mise tmux
+    cd configs && stow -Dt ~ fish ghostty git gitui helix mise tmux
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 
@@ -30,8 +30,8 @@ setup: mise-install packages fonts link
 
 # Install required packages and CLI tools
 packages:
-    brew install just git git-delta fish stow helix uv \
-        lazygit fd ripgrep bat eza fzf taplo
+    brew install git git-delta fish stow helix uv \
+        gitui fd ripgrep bat eza fzf taplo
 
 # Install fonts
 fonts:
