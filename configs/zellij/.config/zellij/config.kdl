@@ -4,6 +4,7 @@
 // UI and Display Settings
 simplified_ui true
 pane_frames true
+show_startup_tips false
 pane_frame_style "titles"
 default_shell "fish"
 theme "tomorrow-night-blue"
