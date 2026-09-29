@@ -1,13 +1,13 @@
-# Terminal Development Setup: Ghostty + Zellij + Helix + GitUI + Fish
+# Terminal Development Setup: Kitty + Zellij + Helix + GitUI + Fish
 
-This guide is for developers transitioning from a VS Code-centric workflow to a terminal-first setup using Ghostty, Zellij, Helix, GitUI, and Fish. The goal is to maintain persistent multi-pane project sessions, edit using modal selections, handle Git visually, and work efficiently without GUI IDE overhead.
+This guide is for developers transitioning from a VS Code-centric workflow to a terminal-first setup using Kitty, Zellij, Helix, GitUI, and Fish. The goal is to maintain persistent multi-pane project sessions, edit using modal selections, handle Git visually, and work efficiently without GUI IDE overhead.
 
 ---
 
 ## 1. 10-Minute Quick Start
 
 ### 1. Start or Reconnect to a Project Workspace
-Open Ghostty and run:
+Open Kitty and run:
 ```sh
 zellij attach -c my-app
 ```
@@ -64,7 +64,7 @@ Or build the split manually from a single pane:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                 Ghostty (Terminal Emulator)                 │
+│                  Kitty (Terminal Emulator)                  │
 │  └─ Window frame, font rendering, macOS Cmd key bridging    │
 └──────────────────────────────┬──────────────────────────────┘
                                │
@@ -81,11 +81,43 @@ Or build the split manually from a single pane:
 
 | Component | Tool in Setup | Primary Responsibility | Replaces in VSCode |
 | :--- | :--- | :--- | :--- |
-| **Terminal Emulator** | **Ghostty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging | VSCode application window frame |
+| **Terminal Emulator** | **Kitty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging | VSCode application window frame |
 | **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, persistent tiled & floating panes | Split editors, layout management, terminal panel |
 | **Modal Editor** | **Helix** | Selection-first editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) | Monaco editor, LSP extensions, Prettier |
 | **Git Interface** | **GitUI** | Interactive staging, line-by-line diffs, commit history, branches | Source Control panel, GitLens |
 | **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow aliases (`gui`, `zj`, `pnd`, `pn`) | Integrated terminal shell |
+
+### Why Each Tool Was Chosen (Architectural Rationale)
+
+Each component in this stack was selected according to specific technical merits:
+
+* **Terminal Emulator (Kitty)**:
+  * **C + OpenGL GPU Pipeline**: Offloads text rasterization and rendering directly to shaders, ensuring sub-5ms input latency and native 120Hz ProMotion support without frame stutter.
+  * **Zero Visual Clutter**: Operates strictly as a high-performance text canvas. It introduces no forced GUI elements, tabs, or drag handles, leaving all window splitting and layout management to Zellij.
+  * **Production Stability**: A mature, battle-tested codebase (8+ years) with comprehensive support for font ligatures, custom glyphs, and unified configuration.
+
+* **Workspace Multiplexer (Zellij)**:
+  * **Session Persistence**: Decouples processes from terminal windows. Compilers, dev servers, and test suites run in background daemons that survive terminal restarts and disconnects.
+  * **Declarative Layouts**: Tiled splits are managed via deterministic text layouts (`.kdl`), providing predictable 70/30 IDE splits without relying on window manager hacks.
+  * **Clean Context Switching**: TUI-native tabs and floating scratchpads organize project concerns with zero desktop window sprawl.
+
+* **Modal Editor (Helix)**:
+  * **Selection-First Paradigm**: Follows a visual selection-action model (`select -> verify -> act`). You see exactly what text will change before issuing an edit, reducing cognitive overhead.
+  * **Built-in Language Intelligence**: Native Language Server Protocol (LSP), Tree-sitter syntax parsing, and code formatting are integrated directly into a single binary, eliminating plugin management drift and extension conflicts.
+  * **Instant Startup**: Zero startup delay and minimal memory consumption, maintaining identical performance regardless of project size.
+
+* **Git Interface (GitUI)**:
+  * **Line & Hunk Staging**: Provides sub-second keyboard staging, hunk splitting, and interactive diff inspection without leaving the terminal or opening heavy GUI applications.
+  * **Contextual Co-location**: Resides permanently in a dedicated 30% split pane, allowing instant transitions between writing code and committing changes.
+
+* **Interactive Shell (Fish)**:
+  * **Prompt Abbreviation (`abbr`)**: Expands shortcuts in-place upon pressing Space, ensuring shell history records the canonical, portable command while preserving native flag autocompletions.
+  * **Out-of-the-Box Ergonomics**: Syntax highlighting and history-driven autosuggestions work immediately without third-party plugin frameworks.
+
+* **Modern CLI Utilities (`rg`, `fd`, `bat`, `eza`, `delta`, `zoxide`, `sd`, `jaq`, `tldr`)**:
+  * **Project Awareness**: Default exclusion of `.gitignore` entries, hidden files, and build directories (`node_modules/`, `dist/`).
+  * **Git-Aware Output**: Gutter change indicators in files (`bat`), modification columns in directory trees (`eza`), and character-level inline diff highlights (`delta`).
+  * **Cross-Platform Uniformity**: Replaces divergent OS flags with standard, predictable syntax (`sd` replacing `sed -i` quirks).
 
 ---
 
@@ -304,7 +336,7 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 Terminal applications with mouse capture enabled intercept standard clicks. To open URLs:
 
 * **From Helix (`gf`)**: Place the cursor anywhere on the URL and press `gf` (goto_file). Helix detects the `https://` protocol and opens the address in your default macOS browser.
-* **From Ghostty (`Shift + Click`)**: Hold `Shift` (or `Cmd + Shift`) while clicking any link to bypass terminal mouse capture and launch the URL.
+* **From Kitty (`Cmd + Click` or `Shift + Click`)**: Hold `Cmd` or `Shift` while clicking any link to open it directly in your browser.
 
 ---
 
@@ -334,25 +366,24 @@ Terminal applications with mouse capture enabled intercept standard clicks. To o
 
 ## 9. macOS Shortcuts & Ergonomics
 
-### 1. Ghostty Native `Cmd` Bridges
-Configured in [`configs/ghostty/.config/ghostty/config`](file:///Users/nikita/Projects/.dotfiles/configs/ghostty/.config/ghostty/config) to map standard macOS `Cmd` combinations directly to Helix commands:
+### 1. Kitty Native `Cmd` Bridges
+Configured in [`configs/kitty/.config/kitty/kitty.conf`](file:///Users/nikita/Projects/.dotfiles/configs/kitty/.config/kitty/kitty.conf) to map standard macOS `Cmd` combinations directly to Helix commands:
 * **`Cmd + S`**: Save buffer (`:w`)
 * **`Cmd + P`**: File picker (`Space + f`)
 * **`Cmd + /`**: Toggle line comment (`Ctrl + c`)
 * **`Cmd + Shift + P`**: Command palette (`Alt + x`)
 * **`Cmd + Shift + F`**: Global search (`Space + /`)
 
-### 2. Option Key as Alt (`macos-option-as-alt = true`)
+### 2. Option Key as Alt (`macos_option_as_alt yes`)
 By default on macOS, terminal emulators treat the physical `⌥ Option` key as a character accent composer (typing symbols like `å`, `ç`, `ƒ`) rather than ANSI `Alt` / `Meta` escape sequences.
-Ghostty is configured with:
+Kitty is configured with:
 ```ini
-macos-option-as-alt = true
+macos_option_as_alt yes
 ```
 This maps the physical `⌥ Option` key directly to terminal `Alt`:
 * **In Zellij**: `Alt + n` (new pane), `Alt + h/j/k/l` (switch pane), `Alt + [` / `Alt + ]` (cycle tabs), `Alt + f` (floating toggle).
 * **In Helix**: `Alt + s` (split selection across lines), `Alt + w` (close buffer), `Alt + x` (command palette).
 * **Alternative**: Zellij also provides the `Ctrl + a` leader prefix (`Ctrl + a` then `h/j/k/l`, `|`, `-`, `z`, `w`), which requires no `Alt` key at all.
-* *(Note: Ghostty requires a full app restart via `Cmd + Q` for keyboard handler updates to take effect).*
 
 ### 3. Thumb-Driven `Space` Leader Key
 Most Helix commands start with `Space`, keeping actions within reach from the home row:
@@ -365,7 +396,7 @@ Most Helix commands start with `Space`, keeping actions within reach from the ho
 * `Space + a`: Code actions
 * `Space + k`: Type inspection
 
-### 3. Recommended: Remap Caps Lock to Control
+### 4. Recommended: Remap Caps Lock to Control
 Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `Ctrl + d` scroll) are significantly easier to reach when mapped to the home row:
 1. Open **macOS System Settings** → **Keyboard** → **Keyboard Shortcuts…** → **Modifier Keys**.
 2. Select your keyboard, and change **Caps Lock Key** to **Control**.
@@ -374,13 +405,7 @@ Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `C
 
 ## 10. Gotchas & Terminal Nuances
 
-### 1. Ghostty `Cmd + Shift + /` Opens Online Documentation
-* On macOS, `Cmd + Shift + /` (which resolves to `Cmd + ?`) is the native OS menu shortcut for the Help menu.
-* In Ghostty, pressing `Cmd + Shift + /` immediately launches your web browser and navigates to `https://ghostty.org/docs`.
-* **Do not use `Cmd + Shift + /` for editor shortcuts** (such as block comments or help).
-* Use **`Cmd + /`** for line comments, **`Space + C`** for block comments, and **`Cmd + Shift + P`** (or `Space + ?`) for the Command Palette.
-
-### 2. Zellij `Ctrl + a` Leader Pass-Through
+### 1. Zellij `Ctrl + a` Leader Pass-Through
 * `Ctrl + a` is the configured leader key for Zellij to prevent collisions with Helix's `Cmd + P` (`Ctrl + p`) and `Cmd + S` (`Ctrl + s`).
 * To send a literal `Ctrl + a` to a shell or inner SSH session, press `Ctrl + a` twice.
 
@@ -420,6 +445,7 @@ All workflow abbreviations expand interactively when pressing `Space` or `Enter`
 | `pns` | `pnpm storybook` | Start Storybook |
 | `pnt` | `pnpm test:dev` | Run test suite in watch mode |
 | `jq` | `jaq` | Fast Rust JSON query processor |
+| `md` | `mdcat` | Render Markdown with inline images & Mermaid |
 
 ---
 
@@ -445,6 +471,7 @@ While execution speed is high, the primary benefits are sane defaults, Git aware
 | **sd** | `sed` | `sd` | Standard PCRE regex; consistent syntax across macOS and Linux |
 | **jaq** | `jq` | `jaq` *(or `jq`)* | Precise number handling and clearer error diagnostics |
 | **tealdeer** | `man` | `tldr` | Practical, task-oriented examples for fast copy-pasting |
+| **mdcat** | markdown cat | `mdcat` *(or `md`)* | Renders Markdown with inline images (Kitty protocol), Mermaid diagrams, and live watch (`-w`) |
 
 ---
 

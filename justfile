@@ -6,11 +6,11 @@ default:
 
 # Symlink configs to ~ using stow
 link:
-    cd configs && stow -vt ~ fish ghostty git gitui helix mise zellij
+    cd configs && stow -vt ~ fish git gitui helix kitty mise zellij
 
 # Remove config symlinks
 unlink:
-    cd configs && stow -Dt ~ fish ghostty git gitui helix mise zellij
+    cd configs && stow -Dt ~ fish git gitui helix kitty mise zellij
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,13 @@ setup: mise-install packages fonts link
 packages:
     brew install git git-delta fish stow helix uv \
         gitui zellij fd ripgrep bat eza fzf taplo \
-        jaq zoxide tealdeer sd
+        jaq zoxide tealdeer sd mdcat
+    brew install --cask kitty
+
+# Refresh macOS Dock icon cache (updates custom icons)
+dock-cache:
+    rm -f /var/folders/*/*/*/com.apple.dock.iconcache
+    killall Dock
 
 # Install fonts
 fonts:

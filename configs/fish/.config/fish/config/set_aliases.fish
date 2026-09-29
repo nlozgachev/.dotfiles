@@ -56,6 +56,9 @@ abbr -a j just
 # JSON query
 abbr -a jq jaq
 
+# Markdown viewer
+abbr -a md mdcat
+
 # CLI utilities
 alias ls="eza --icons"
 alias ll="eza -la --icons --git"
