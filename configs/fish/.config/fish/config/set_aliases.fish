@@ -28,14 +28,37 @@ alias gcp="git cherry-pick"
 alias gbl="git blame"
 alias glf="git log --pretty=format:'%h - %an, %ar : %s'"
 
-abbr pn pnpm
-abbr pnd pnpm dev
-abbr pns pnpm storybook
-abbr pnt pnpm test:dev
+# ── Package Manager Abbreviations ─────────────────────────────────────────────
+abbr -a pn pnpm
+abbr -a pnd pnpm dev
+abbr -a pns pnpm storybook
+abbr -a pnt pnpm test:dev
 
+# ── Tool Abbreviations ────────────────────────────────────────────────────────
+# Helix
+abbr -a helix hx
+abbr -a h hx
+
+# GitUI
+abbr -a gui gitui
+
+# Zellij
+abbr -a zj zellij
+abbr -a zja "zellij attach -c"
+abbr -a zide "zellij --layout ide"
+abbr -a zjl "zellij list-sessions"
+abbr -a zjk "zellij kill-session"
+abbr -a zjd "zellij delete-all-sessions"
+
+# Just runner
+abbr -a j just
+
+# JSON query
+abbr -a jq jaq
+
+# CLI utilities
 alias ls="eza --icons"
 alias ll="eza -la --icons --git"
 alias lt="eza --tree --icons"
 alias cat="bat"
 alias find="fd"
-alias gui="gitui"

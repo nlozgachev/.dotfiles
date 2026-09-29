@@ -1,313 +1,456 @@
-# Terminal Development Setup: Ghostty + Tmux + Helix + GitUI + Fish
+# Terminal Development Setup: Ghostty + Zellij + Helix + GitUI + Fish
 
-A reference guide for working in a terminal development environment using Ghostty, Tmux, Helix, GitUI, and Fish.
+This guide is for developers transitioning from a VS Code-centric workflow to a terminal-first setup using Ghostty, Zellij, Helix, GitUI, and Fish. The goal is to maintain persistent multi-pane project sessions, edit using modal selections, handle Git visually, and work efficiently without GUI IDE overhead.
 
 ---
 
-## 1. Architecture & Tool Roles
+## 1. 10-Minute Quick Start
+
+### 1. Start or Reconnect to a Project Workspace
+Open Ghostty and run:
+```sh
+zellij attach -c my-app
+```
+*(Or use the alias `zj a -c my-app`). This connects to an existing session or creates a new persistent session if it does not exist.*
+
+### 2. Set Up the 3-Pane Layout
+You can launch directly with the built-in 3-pane IDE layout:
+```sh
+zide
+```
+*(Expands to `zellij --layout ide`).*
+
+Or build the split manually from a single pane:
+1. Split vertical (left and right):
+   ```
+   Ctrl + a  then  |
+   ```
+2. Move focus to the right pane:
+   ```
+   Ctrl + a  then  l
+   ```
+3. Split the right pane horizontal (top and bottom):
+   ```
+   Ctrl + a  then  -
+   ```
+
+### 3. Launch Tools in Their Panes
+* **Left pane (70%)**: Focus with `Ctrl + a` then `h`, then launch Helix:
+  ```sh
+  hx .
+  ```
+* **Top-right pane (30%)**: Focus with `Ctrl + a` then `l`, then start your dev server or test runner:
+  ```sh
+  pnd     # pnpm run dev alias
+  ```
+* **Bottom-right pane (30%)**: Focus with `Ctrl + a` then `j`, then launch GitUI:
+  ```sh
+  gui
+  ```
+
+### 4. The 6 Essential Daily Shortcuts
+| Action | Shortcut | Details |
+| :--- | :--- | :--- |
+| **Open File** | `Cmd + P` *(or `Space + f`)* | Fuzzy file finder; type 2–3 letters |
+| **Global Search** | `Cmd + Shift + F` *(or `Space + /`)* | Live ripgrep search across repository |
+| **Save & Format** | `Cmd + S` *(or `:w`)* | Writes file and auto-formats via `oxfmt` |
+| **Switch Panes** | `Ctrl + a` then `h` / `j` / `k` / `l` | Move focus between editor, server, and git |
+| **Zoom Pane** | `Ctrl + a` then `z` | Maximize focused pane to 100%; press again to restore splits |
+| **Stage Changes** | In GitUI: `Enter` on file → `s` | Stages selected line or hunk into commit |
+
+---
+
+## 2. Architecture & Tool Roles
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                 Ghostty (Terminal Emulator)                 │
-│  └─ Window management, font rendering, macOS key shortcuts  │
+│  └─ Window frame, font rendering, macOS Cmd key bridging    │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│           Tmux (Persistent Sessions, Windows, Splits)       │
-│  ├─ Window 1: "editor"                                      │
-│  │   ├─ Pane 1: Helix Editor (vtsls + oxlint + oxfmt)       │
-│  │   ├─ Pane 2: GitUI                                       │
-│  │   └─ Pane 3: Fish Shell                                  │
-│  ├─ Window 2: "servers" (Dev Server, Watchers, Logs)        │
-│  └─ Window 3: "git"     (Full-Screen Git Operations)        │
+│           Zellij (Persistent Sessions, Tabs, Splits)        │
+│  ├─ Tab 1: "editor" (Main Workspace)                        │
+│  │   ├─ Left Pane (70%): Helix Editor                       │
+│  │   ├─ Top-Right (30%): Dev Server / Watcher               │
+│  │   └─ Bottom-Right (30%): GitUI                           │
+│  ├─ Tab 2: "servers" (Background Daemons / Logs)            │
+│  └─ Floating Pane: Scratch terminal (toggle with Ctrl+a w)  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-| Component | Tool | Role | VSCode Equivalent |
+| Component | Tool in Setup | Primary Responsibility | Replaces in VSCode |
 | :--- | :--- | :--- | :--- |
-| **Terminal Emulator** | **Ghostty** | Window display, font rendering, macOS shortcut bridging | VSCode application window |
-| **Workspace Multiplexer** | **Tmux** | Persistent sessions, window tabs, pane splits | Editor splits, layout management, terminal panel |
-| **Editor** | **Helix** | Code editing, syntax highlighting, LSP client, formatting | Editor pane, Monaco editor, LSP extensions |
-| **Git Client** | **GitUI** | Staging, diff inspection, commit history, branches | Source Control view, diff editor |
-| **Shell** | **Fish** | Interactive shell, completions, package manager aliases | Integrated terminal shell |
+| **Terminal Emulator** | **Ghostty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging | VSCode application window frame |
+| **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, persistent tiled & floating panes | Split editors, layout management, terminal panel |
+| **Modal Editor** | **Helix** | Selection-first editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) | Monaco editor, LSP extensions, Prettier |
+| **Git Interface** | **GitUI** | Interactive staging, line-by-line diffs, commit history, branches | Source Control panel, GitLens |
+| **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow aliases (`gui`, `zj`, `pnd`, `pn`) | Integrated terminal shell |
 
 ---
 
-## 2. Tmux: Sessions, Windows, and Panes
+## 3. Zellij: Workspaces, Tabs, and Panes
 
-Prefix key:
-```
-Ctrl + a
-```
+Zellij is configured with a **simplified UI** (`simplified_ui true`) and the Tomorrow Night Blue palette. It displays regular text dividers and boxes without arrow-styled powerline fonts, while keeping on-screen key-helpers visible at the bottom.
 
-### 1. Sessions
-Sessions represent independent workspaces that persist in the background.
+To avoid conflicts with Helix's `Cmd + P` (`Ctrl + p` file picker) and `Cmd + S` (`Ctrl + s` save), Zellij uses **`Ctrl + a`** as its leader prefix.
 
-| Action | Shortcut / Command | Description |
+### Sessions (Project Workspaces)
+Sessions persist in the background across disconnects and terminal restarts.
+
+| Action | Command / Shortcut | Description |
 | :--- | :--- | :--- |
-| **New session** | `tmux new -s <name>` | Create a named session |
-| **Detach** | `Ctrl + a` then `d` | Detach and leave session running |
-| **List sessions** | `tmux ls` | List active sessions |
-| **Attach** | `tmux attach -t <name>` | Reconnect to an existing session |
-| **Kill session** | `tmux kill-session -t <name>` | Terminate a session |
+| **New or attach session** | `zellij attach -c <name>` | Connect to existing session or create it |
+| **Short alias** | `zj a -c <name>` | Quick attach/create alias |
+| **Detach session** | `Ctrl + a` then `d` | Leave session running in background |
+| **List active sessions** | `zellij ls` *(or `zj ls`)* | Show all active sessions |
+| **Kill session** | `zellij k <name>` | Terminate a session and its processes |
+| **Delete dead sessions** | `zellij delete-all-sessions` | Clean up inactive session cache |
 
-### 2. Windows
-Windows function as tabs across the status line.
+### Tabs (Virtual Workspaces)
+Tabs appear along the top bar with clean brackets and numbers.
 
 | Action | Shortcut | Description |
 | :--- | :--- | :--- |
-| **New window** | `Ctrl + a` then `c` | Create a new window |
-| **Rename window** | `Ctrl + a` then `,` | Rename current window |
-| **Go to window N** | `Ctrl + a` then `1` / `2` / `3` | Switch directly to window by index |
-| **Next / Prev window** | `Ctrl + a` then `n` / `p` | Cycle to next or previous window |
-| **Close window** | `Ctrl + a` then `&` | Close current window |
+| **New tab** | `Ctrl + a` then `c` | Open a new tab |
+| **Switch to tab N** | `Ctrl + a` then `1` / `2` / `3` / `4` / `5` | Switch directly to tab index |
+| **Next / Prev tab** | `Ctrl + t` then `n` / `p` *(or `Right`/`Left`)* | Cycle through tabs in Tab mode |
+| **Rename tab** | `Ctrl + t` then `r` | Rename the active tab |
+| **Close tab** | `Ctrl + t` then `x` | Close current tab |
 
-### 3. Panes
-Panes split the active window into multiple terminal regions.
+### Panes (Tiled & Floating Splits)
+Panes divide the window into multiple active terminal regions.
 
 | Action | Shortcut | Description |
 | :--- | :--- | :--- |
 | **Split vertical** | `Ctrl + a` then `\|` | Split pane left and right |
 | **Split horizontal** | `Ctrl + a` then `-` | Split pane top and bottom |
 | **Navigate panes** | `Ctrl + a` then `h` / `j` / `k` / `l` | Move focus left, down, up, or right |
-| **Toggle zoom** | `Ctrl + a` then `z` | Maximize current pane (press again to restore) |
-| **Cycle layouts** | `Ctrl + a` then `Space` | Switch between tiling arrangements |
-| **Resize pane** | Drag border with mouse | Mouse mode is enabled (`set -g mouse on`) |
-| **Close pane** | `Ctrl + d` or `exit` | Close active pane |
-
-### 4. Typical 3-Pane Layout
-
-```
-┌───────────────────────────────────────┬────────────────────────┐
-│                                       │  Top-Right (25%):      │
-│                                       │  Dev Server / Watcher  │
-│  Left Pane (75%):                     │  $ pnd                 │
-│  Helix Editor                         ├────────────────────────┤
-│                                       │  Bottom-Right (25%):   │
-│                                       │  GitUI or Fish Shell   │
-│                                       │  $ gui                 │
-└───────────────────────────────────────┴────────────────────────┘
-```
+| **Toggle zoom** | `Ctrl + a` then `z` | Maximize current pane to 100% (press again to restore) |
+| **Toggle floating pane** | `Ctrl + a` then `w` | Toggle a floating scratch pane over your layout |
+| **Close focused pane** | `Ctrl + a` then `x` *(or `Ctrl + d`)* | Close active pane |
+| **Resize mode** | `Ctrl + a` then `r` *(or `Ctrl + n`)* | Enter resize mode; use `h/j/k/l` or `+/-` to resize |
+| **Move / Reorder mode** | `Ctrl + a` then `m` *(or `Ctrl + h`)* | Enter move mode to swap pane positions |
 
 ---
 
-## 3. GitUI: Terminal Git Interface
+## 4. GitUI: Terminal Git Interface
 
-Launch by running:
+Launch GitUI in any pane or window:
 ```sh
 gui
 ```
-*(Aliased to `gitui` in `configs/fish/.config/fish/config/set_aliases.fish`)*
 
 ### Views
-Switch between views using **`1`**, **`2`**, **`3`**, **`4`** (or `Tab` / `Shift + Tab`):
+Switch views using **`1`**, **`2`**, **`3`**, **`4`** (or `Tab` / `Shift + Tab`):
 
-1. **`Status` (1)**: Modified and untracked files, hunk review, staging.
-2. **`Log` (2)**: Commit history, commit details, branch graph.
-3. **`Files` (3)**: Repository file tree at `HEAD`.
-4. **`Stashing` (4)**: Stash list, diff preview, apply, and drop.
+* **`1` Status**: Working tree modifications, untracked files, and staging.
+* **`2` Log**: Commit history, author and date metadata, and branch graphs.
+* **`3` Files**: File tree at `HEAD` to inspect repository contents.
+* **`4` Stashing**: Stash management (inspect, apply, and drop).
 
-### Keybindings
+### Keybindings Reference
 
 | Action | Key | Description |
 | :--- | :--- | :--- |
-| **Stage / Unstage File** | `s` / `u` | Stage or unstage selected file |
-| **Stage All** | `a` | Stage all unstaged changes |
-| **Discard Changes** | `D` *(Shift + d)* | Discard modifications in selected file or hunk |
-| **Commit** | `c` | Open commit dialog |
-| **Amend** | `c` then toggle amend | Amend previous commit |
-| **Push** | `p` | Push commits to remote branch |
-| **Pull** | `P` *(Shift + p)* | Pull commits from remote |
+| **Stage / Unstage File** | `s` / `u` | Stage or unstage the highlighted file |
+| **Stage All** | `a` | Stage all unstaged changes across repository |
+| **Discard Changes** | `D` *(Shift + d)* | Prompts to discard changes in file or selected hunk |
+| **Commit** | `c` | Open commit message editor |
+| **Amend Commit** | `c` then toggle amend | Add staged changes to previous commit |
+| **Push** | `p` | Push committed changes to remote branch |
+| **Pull** | `P` *(Shift + p)* | Pull incoming commits from remote |
 | **Fetch** | `f` | Fetch remote references |
-| **Branch Menu** | `b` | Open branch list (switch or create) |
-| **Tag Menu** | `t` | Open tag management |
-| **Help** | `?` | Show interactive keybinding reference |
+| **Branch Menu** | `b` | Switch branch, checkout, or create new branch |
+| **Tag Menu** | `t` | Create or delete tags |
+| **Help Menu** | `?` | Interactive keymap overview |
 | **Quit** | `q` | Exit GitUI back to shell |
 
 ### Staging Line by Line
-1. In the **Status** view (`1`), select a modified file.
+1. In the **Status** view (`1`), use `j`/`k` to select a modified file.
 2. Press `Enter` to focus the diff viewer.
-3. Navigate to lines or hunks using `j` and `k`.
-4. Press `s` to stage the selected line/hunk, or `u` to unstage.
+3. Navigate to a specific line or hunk with `j` and `k`.
+4. Press `s` to stage that line or hunk (or `u` to unstage).
 5. Press `Esc` to return focus to the file list.
 
 ---
 
-## 4. Helix Editor
+## 5. Helix Editor: Key Reference Lists
 
-### 1. Selection-First Editing Model
-Helix evaluates selections before applying actions:
-1. `w` selects the next word.
-2. `d` deletes the selection, or `c` deletes it and enters Insert mode.
+Helix is a modal, selection-first editor. Actions apply to the currently selected text.
 
-The cursor always represents an active selection of at least one character.
+### Modes
 
-### 2. Modes
-
-| Mode | Status Line | How to Enter | How to Exit |
+| Mode | Status Indicator | How to Enter | How to Exit |
 | :--- | :--- | :--- | :--- |
-| **Normal** | `NOR` | `Esc` | `i`, `a`, `c`, `v` |
-| **Insert** | `INS` | `i` (before selection), `a` (after selection) | `Esc` |
-| **Select** | `SEL` | `v` | `v` or `Esc` |
+| **Normal** | `NOR` | `Esc` | Press `i`, `a`, `c`, or `v` |
+| **Insert** | `INS` | `i` (before selection), `a` (after selection) | Press `Esc` |
+| **Select** | `SEL` | `v` (extend selection with motions) | Press `v` or `Esc` |
 
-### 3. Motion & Navigation
-* `h`, `j`, `k`, `l`: Move left, down, up, right.
-* `w` / `b` / `e`: Move to next word start, previous word start, word end.
-* `x`: Select current line (repeat to extend selection line by line).
-* `gh` / `gl` / `gs`: Move to line start, line end, first non-whitespace character.
-* `gg`: Jump to first line of file.
-* `ge`: Jump to last line of file.
-* `:123` then `Enter`: Jump to line 123.
-* `Ctrl + d` / `Ctrl + u`: Scroll half-page down / up.
+### Motions & Navigation
 
-### 4. Opening Lines at File Boundaries
-* **Start of file**: Press `gg` then `O` *(capital O)*. Jumps to the top, inserts a blank line above line 1, and enters Insert mode.
-* **End of file**: Press `ge` then `o` *(lowercase o)*. Jumps to the bottom, inserts a blank line below the last line, and enters Insert mode.
-
-### 5. Editing Actions
-* `i` / `a`: Insert before / after selection.
-* `I` / `A`: Insert at line start / line end.
-* `o` / `O`: Open new line below / above current line and enter Insert mode.
-* `c`: Change selection (deletes selection and enters Insert mode).
-* `d`: Delete selection.
-* `y` / `p` / `P`: Yank (copy), paste after, paste before.
-* `u` / `U`: Undo / Redo.
-* `>` / `<`: Indent / unindent selected lines.
-
-### 6. Text Objects & Surround (`m`)
-Match mode operates on enclosed delimiters:
-
-| Key | Target | Example |
+| Key | Motion | Details |
 | :--- | :--- | :--- |
-| `mi"` / `ma"` | Inside / Around double quotes | `"hello"` → `hello` / `"hello"` |
-| `mi'` / `ma'` | Inside / Around single quotes | `'token'` → `token` / `'token'` |
+| `h` / `j` / `k` / `l` | Left / Down / Up / Right | Basic character motions |
+| `w` / `b` / `e` | Word start / Prev word / Word end | Word motions (selects range) |
+| `W` / `B` / `E` | WORD start / Prev WORD / WORD end | Non-whitespace WORD motions |
+| `x` | Select line | Press repeatedly to extend selection line by line |
+| `gh` / `gl` | Line start / Line end | Move cursor to beginning or end of line |
+| `gs` | First non-whitespace | Jump to first non-blank character of line |
+| `gg` / `ge` | File start / File end | Jump to first or last line of file |
+| `:123` then `Enter` | Go to line 123 | Direct line jump |
+| `Ctrl + d` / `Ctrl + u` | Page down / Page up | Scroll half-page down or up |
+
+### Opening Lines at Boundaries
+* **Start of file**: Press `gg` then `O` *(capital O)*. Jumps to line 1, opens a blank line above it, and enters Insert mode.
+* **End of file**: Press `ge` then `o` *(lowercase o)*. Jumps to the last line, opens a blank line below it, and enters Insert mode.
+
+### Editing Actions
+
+| Key | Action | Description |
+| :--- | :--- | :--- |
+| `i` / `a` | Insert before / after | Enter Insert mode at selection boundaries |
+| `I` / `A` | Insert at line start / end | Jump to line boundary and enter Insert mode |
+| `o` / `O` | Open line below / above | Insert new line and enter Insert mode |
+| `c` | Change | Delete selection and enter Insert mode |
+| `d` | Delete | Delete selection (copies text to register) |
+| `y` | Yank | Copy selection to register |
+| `p` / `P` | Paste after / before | Paste register contents |
+| `u` / `U` | Undo / Redo | Revert or reapply changes |
+| `>` / `<` | Indent / Unindent | Shift selected lines right or left |
+
+### Text Objects & Surround (`m` Match Mode)
+
+| Text Object | What It Selects | Example |
+| :--- | :--- | :--- |
+| `mi"` / `ma"` | Inside / Around double quotes | `"item"` → `item` / `"item"` |
+| `mi'` / `ma'` | Inside / Around single quotes | `'item'` → `item` / `'item"` |
 | `mi(` / `ma(` | Inside / Around parentheses | `(a, b)` → `a, b` / `(a, b)` |
-| `mi{` / `ma{` | Inside / Around braces | `{ id }` → ` id ` / `{ id }` |
-| `mif` / `maf` | Inside / Around function body | Function implementation block |
+| `mi{` / `ma{` | Inside / Around braces | `{ key }` → ` key ` / `{ key }` |
+| `mi[` / `ma[` | Inside / Around brackets | `[0, 1]` → `0, 1` / `[0, 1]` |
+| `mif` / `maf` | Inside / Around function | Selects entire function implementation |
 
-* **Surround selection**: Select text, then press `ms"` (surrounds with `"..."`) or `ms(` (surrounds with `(...)`).
-* **Replace surround**: Place cursor inside quoted string, then press `mr"'` (replaces `"` with `'`).
-* **Delete surround**: Place cursor inside quoted string, then press `md"` (removes quotes).
+* **Surround selection**: Select text, press `ms"` (surrounds with `"..."`) or `ms(` (surrounds with `(...)`).
+* **Replace surround**: Inside quoted text, press `mr"'` (replaces `"` with `'`).
+* **Delete surround**: Inside quoted text, press `md"` (removes surrounding quotes).
 
-### 7. Multi-Cursor Selection
-* **Regex select (`s`)**: Select a block (e.g. `x` or whole buffer `%`), press `s`, type a pattern, and press `Enter`. Each match receives an active cursor. Edit with `c` or `d`. Press `,` (comma) to remove extra cursors.
-* **Add cursor below (`C`)**: Press `C` *(capital C)* to add a cursor on the next line.
-* **Split into lines (`Alt + s`)**: Splits a multi-line selection into one cursor per line.
+### Code Intelligence (LSP & Diagnostics)
 
-### 8. Language Server & Formatting
-* **Go to Definition**: `F12` (or `gd`). Return with `Ctrl + o`.
-* **Find References**: `Shift + F12` (or `gr`).
-* **Hover / Type Info**: `Space + k` (or `K`).
-* **Inlay Hints**: Types and parameter names display inline automatically (`vtsls`).
-* **Code Actions**: `Space + a`.
-* **Diagnostics**:
-  * File diagnostics: `Space + d`
-  * Workspace diagnostics: `Space + D`
-  * Next / previous diagnostic: `]d` / `[d`
-* **Rename Symbol**: `F2` (or `Space + r`), type new name, press `Enter`. Save modified buffers with `:wa`.
-* **Format**: `Cmd + S` (or `:format`), formatted via `oxfmt`.
+| Shortcut | Action | Description |
+| :--- | :--- | :--- |
+| `F12` *(or `gd`)* | Go to Definition | Jump to symbol definition (`Ctrl + o` jumps back) |
+| `Shift + F12` *(or `gr`)* | Find References | List all references in interactive fuzzy picker |
+| `Space + k` *(or `K`)* | Hover Info | Show type signatures and documentation |
+| `Space + a` | Code Actions | Quick fixes, imports, and linter suggestions |
+| `Space + d` | File Diagnostics | List errors and warnings in current file |
+| `Space + D` | Workspace Diagnostics | List errors and warnings across the project |
+| `]d` / `[d` | Next / Prev Error | Jump directly to next or previous diagnostic |
+| `F2` *(or `Space + r`)* | Rename Symbol | Semantic project-wide rename (commit with `:wa`) |
+| `Cmd + S` *(or `:format`)* | Format File | Format file using configured formatter (`oxfmt`) |
+
+### Buffer & File Management
+
+| Shortcut | Action | Description |
+| :--- | :--- | :--- |
+| `Tab` / `Shift + Tab` | Next / Prev Buffer | Cycle through open buffers across top tab bar |
+| `gn` / `gp` | Next / Prev Buffer | Vim-compatible buffer navigation |
+| `Space + b` | Buffer Picker | Interactive fuzzy search of open buffers |
+| `Alt + w` *(or `:bc`)* | Close Buffer | Close current buffer tab (`:bc!` force closes) |
+| `:open <path>` | Open / Create File | Opens file; creates directories automatically on save |
+| `:wa` | Write All | Saves all open, modified buffers to disk |
 
 ---
 
-## 5. Opening Links and URLs
+## 6. Daily Task Workflows
+
+### Workflow 1: Renaming a Symbol Across the Entire Project
+1. Place the cursor on the function, variable, or class name in Helix.
+2. Press **`F2`** (or `Space + r`).
+3. Type the new name and press `Enter`. The language server (`vtsls`) updates all references across files.
+4. Type **`:wa`** and press `Enter` to commit the modified buffers to disk.
+
+### Workflow 2: Editing Function Contents with Text Objects
+1. Move the cursor inside any function body.
+2. In Normal mode, press:
+   ```
+   m  then  i  then  f   (match inside function)
+   ```
+3. The entire implementation block inside the braces is selected.
+4. Press **`c`** to delete the block and enter Insert mode to replace it.
+
+### Workflow 3: Multi-Cursor Regex Search and Edit
+1. Select the target section of code with `x` (or select the entire file with `%`).
+2. Press **`s`** to open regex search.
+3. Type the identifier or pattern to modify (e.g. `prevItem`) and press `Enter`.
+4. Each match becomes an active cursor.
+5. Press **`c`** to change all occurrences simultaneously.
+6. Press **`,`** (comma) when done to collapse back to a single primary cursor.
+
+### Workflow 4: Jump to Definition and Return
+1. Place cursor on a function call or imported module.
+2. Press **`F12`** (or `gd`) to jump directly to its definition.
+3. Inspect or edit the source.
+4. Press **`Ctrl + o`** to jump back to your previous location in the original file.
+
+### Workflow 5: Splitting Multi-Line Selections
+1. Select several lines of code with `x` repeated.
+2. Press **`Alt + s`** to split the selection into one cursor per line.
+3. Press `I` or `A` to insert text at the beginning or end of every selected line simultaneously.
+
+---
+
+## 7. Opening Links and URLs in Code
 
 Terminal applications with mouse capture enabled intercept standard clicks. To open URLs:
 
-* **Helix (`gf`)**: Place the cursor anywhere on the URL and press `gf` (goto_file). Helix opens the address in your default browser.
-* **Ghostty (`Shift + Click`)**: Hold `Shift` (or `Cmd + Shift`) while clicking the link to bypass terminal mouse capture.
+* **From Helix (`gf`)**: Place the cursor anywhere on the URL and press `gf` (goto_file). Helix detects the `https://` protocol and opens the address in your default macOS browser.
+* **From Ghostty (`Shift + Click`)**: Hold `Shift` (or `Cmd + Shift`) while clicking any link to bypass terminal mouse capture and launch the URL.
 
 ---
 
-## 6. Action Reference: VSCode to Terminal
+## 8. VSCode to Terminal Action Map
 
-| Action / Feature | VSCode | Terminal Equivalent | Details |
+| VSCode Feature / Action | VSCode Shortcut | Terminal Equivalent | Details |
 | :--- | :--- | :--- | :--- |
-| **File Picker** | `Cmd + P` | `Cmd + P` / `Ctrl + p` / `Space + f` | Fuzzy search files by path or name |
-| **Create File** | Context menu → New File | `:open src/path/file.ts` | Opens buffer; directory path is created on save |
-| **Save & Format** | `Cmd + S` | `Cmd + S` / `Ctrl + s` / `:w` | Writes buffer and formats with `oxfmt` |
-| **Hover Information** | Mouse hover, `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signature and documentation |
-| **Inlay Hints** | Settings toggle | Displayed inline | Parameter names and return types via `vtsls` |
-| **Project Search** | `Cmd + Shift + F` | `Cmd + Shift + F` / `Space + /` | Live ripgrep search across workspace |
-| **Workspace Symbols** | `Cmd + T` | `Space + S` | Search classes, interfaces, and functions |
-| **Document Outline** | `Cmd + Shift + O` | `Space + s` | List symbols in current buffer |
-| **Problems Panel** | `Cmd + Shift + M` | `Space + d` / `Space + D` | File diagnostics (`Space + d`), workspace (`Space + D`) |
+| **File Picker** | `Cmd + P` | `Cmd + P` / `Space + f` | Interactive fuzzy search by filename |
+| **Global Text Search** | `Cmd + Shift + F` | `Cmd + Shift + F` / `Space + /` | Real-time ripgrep search across files |
+| **Save & Format** | `Cmd + S` | `Cmd + S` / `:w` | Writes buffer and auto-formats (`oxfmt`) |
+| **Hover Types & Docs** | Hover / `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signatures and documentation |
+| **Code Actions & Fixes** | `Cmd + .` | `Space + a` | Quick fixes, imports, linter actions |
+| **Go to Definition** | `F12` | `F12` / `gd` | Jump to definition (`Ctrl + o` returns) |
+| **Find All References** | `Shift + F12` | `Shift + F12` / `gr` | Opens reference list in fuzzy picker |
+| **Project-Wide Rename** | `F2` | `F2` / `Space + r` | Updates all references; commit with `:wa` |
 | **Next / Prev Diagnostic** | `F8` / `Shift + F8` | `]d` / `[d` | Jump directly to next/previous error |
-| **Code Actions** | `Cmd + .` | `Space + a` | Quick fixes, imports, lint rules |
-| **Go to Definition** | `F12` | `F12` / `gd` | Jump to definition (`Ctrl + o` to return) |
-| **Find References** | `Shift + F12` | `Shift + F12` / `gr` | List symbol references in fuzzy picker |
-| **Rename Symbol** | `F2` | `F2` / `Space + r` | Rename across project; save all with `:wa` |
-| **Multi-Cursor Next Match** | `Cmd + D` | `x` → `s` → `Enter` | Select lines, press `s`, type pattern, edit with `c` |
-| **Multi-Cursor Add Below** | `Option + Click` | `C` | Place cursor on next line |
-| **Surround Text** | Type delimiter on selection | `ms"` / `ms(` | Wrap selection in quotes or brackets |
-| **Toggle Line Comment** | `Cmd + /` | `Cmd + /` / `Ctrl + c` / `Space + c` | Toggle comment on line or selection |
-| **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wrap selection in `/* ... */` |
-| **Git Status & Staging** | `Cmd + Shift + G` | `gui` (GitUI) | Visual staging, diffs, commits |
-| **Next / Prev Git Diff** | Gutter click | `]g` / `[g` | Jump to next or previous modified hunk |
-| **Terminal Drawer** | `Ctrl + ` ` / `Cmd + J` | `Ctrl + a` then `-` / `Ctrl + z` | Split pane in Tmux, or suspend Helix with `Ctrl + z` |
-| **Buffer Switching** | Click tabs, `Cmd + Option + Left/Right` | `Tab` / `Shift + Tab` / `Space + b` | `Tab`/`S-Tab` cycles buffers; `Space + b` searches by name |
-| **Close Buffer** | `Cmd + W` | `Alt + w` / `:bc` | Close current buffer (`:bc!` force closes) |
-| **Command Palette** | `Cmd + Shift + P` | `Cmd + Shift + P` / `Alt + x` / `Space + ?` | Searchable command palette |
-| **Open URL** | `Cmd + Click` | `gf` / `Shift + Click` | `gf` on link in Helix, or `Shift + Click` in Ghostty |
+| **Toggle Line Comment** | `Cmd + /` | `Cmd + /` / `Ctrl + c` | Comments/uncomments line or selection |
+| **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
+| **Multi-Cursor Next** | `Cmd + D` | `x` → `s` → `Enter` | Select lines, regex match, edit with `c` |
+| **Git Status & Staging** | `Cmd + Shift + G` | `gui` (GitUI) | Dedicated visual staging and diff viewer |
+| **Terminal Drawer / Split** | `Ctrl + ` ` / `Cmd + J` | `Ctrl + a` then `-` / `Ctrl + a` then `w` | Tiled split or floating scratch pane in Zellij |
+| **Buffer Tabs** | Tab click | `Tab` / `Shift + Tab` | Cycles through open buffer tabs |
+| **Close Tab** | `Cmd + W` | `Alt + w` / `:bc` | Closes active buffer tab |
+| **Command Palette** | `Cmd + Shift + P` | `Cmd + Shift + P` / `Space + ?` | Searchable palette of all editor commands |
 
 ---
 
-## 7. macOS Shortcuts & Ergonomics
+## 9. macOS Shortcuts & Ergonomics
 
-### 1. Ghostty `Cmd` Shortcuts
-Configured in `configs/ghostty/.config/ghostty/config` to map standard macOS `Cmd` combinations to Helix actions:
-* `Cmd + S`: Save buffer (`:w`)
-* `Cmd + P`: File picker (`Space + f`)
-* `Cmd + /`: Toggle line comment (`Space + c`)
-* `Cmd + Shift + P`: Command palette (`Space + ?`)
-* `Cmd + Shift + F`: Global search (`Space + /`)
+### 1. Ghostty Native `Cmd` Bridges
+Configured in [`configs/ghostty/.config/ghostty/config`](file:///Users/nikita/Projects/.dotfiles/configs/ghostty/.config/ghostty/config) to map standard macOS `Cmd` combinations directly to Helix commands:
+* **`Cmd + S`**: Save buffer (`:w`)
+* **`Cmd + P`**: File picker (`Space + f`)
+* **`Cmd + /`**: Toggle line comment (`Ctrl + c`)
+* **`Cmd + Shift + P`**: Command palette (`Alt + x`)
+* **`Cmd + Shift + F`**: Global search (`Space + /`)
 
-### 2. Space Leader Key
-Most Helix commands begin with `Space`, keeping actions reachable without modifying key combinations:
-* `Space + f`: File picker
+### 2. Option Key as Alt (`macos-option-as-alt = true`)
+By default on macOS, terminal emulators treat the physical `⌥ Option` key as a character accent composer (typing symbols like `å`, `ç`, `ƒ`) rather than ANSI `Alt` / `Meta` escape sequences.
+Ghostty is configured with:
+```ini
+macos-option-as-alt = true
+```
+This maps the physical `⌥ Option` key directly to terminal `Alt`:
+* **In Zellij**: `Alt + n` (new pane), `Alt + h/j/k/l` (switch pane), `Alt + [` / `Alt + ]` (cycle tabs), `Alt + f` (floating toggle).
+* **In Helix**: `Alt + s` (split selection across lines), `Alt + w` (close buffer), `Alt + x` (command palette).
+* **Alternative**: Zellij also provides the `Ctrl + a` leader prefix (`Ctrl + a` then `h/j/k/l`, `|`, `-`, `z`, `w`), which requires no `Alt` key at all.
+* *(Note: Ghostty requires a full app restart via `Cmd + Q` for keyboard handler updates to take effect).*
+
+### 3. Thumb-Driven `Space` Leader Key
+Most Helix commands start with `Space`, keeping actions within reach from the home row:
+* `Space + f`: Open file picker
 * `Space + /`: Global search
 * `Space + ?`: Command palette
-* `Space + b`: Buffer switcher
-* `Space + c`: Toggle comment
+* `Space + b`: Switch buffers
+* `Space + c`: Toggle line comment
+* `Space + C`: Toggle block comment
 * `Space + a`: Code actions
-* `Space + k`: Hover information
+* `Space + k`: Type inspection
 
-### 3. Remapping Caps Lock to Control
-For shortcuts that use `Ctrl` (`Ctrl + a` in Tmux, `Ctrl + o` jump back, `Ctrl + d` scroll):
+### 3. Recommended: Remap Caps Lock to Control
+Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `Ctrl + d` scroll) are significantly easier to reach when mapped to the home row:
 1. Open **macOS System Settings** → **Keyboard** → **Keyboard Shortcuts…** → **Modifier Keys**.
-2. Set **Caps Lock Key** to **Control**.
+2. Select your keyboard, and change **Caps Lock Key** to **Control**.
 
 ---
 
-## 8. Common Workflows
+## 10. Gotchas & Terminal Nuances
 
-### Persistent Session Management
-```sh
-# Start or reconnect to a project session
-tmux attach -t my-app || tmux new -s my-app
+### 1. Ghostty `Cmd + Shift + /` Opens Online Documentation
+* On macOS, `Cmd + Shift + /` (which resolves to `Cmd + ?`) is the native OS menu shortcut for the Help menu.
+* In Ghostty, pressing `Cmd + Shift + /` immediately launches your web browser and navigates to `https://ghostty.org/docs`.
+* **Do not use `Cmd + Shift + /` for editor shortcuts** (such as block comments or help).
+* Use **`Cmd + /`** for line comments, **`Space + C`** for block comments, and **`Cmd + Shift + P`** (or `Space + ?`) for the Command Palette.
 
-# Detach from session (leaves processes running)
-Ctrl + a then d
-```
+### 2. Zellij `Ctrl + a` Leader Pass-Through
+* `Ctrl + a` is the configured leader key for Zellij to prevent collisions with Helix's `Cmd + P` (`Ctrl + p`) and `Cmd + S` (`Ctrl + s`).
+* To send a literal `Ctrl + a` to a shell or inner SSH session, press `Ctrl + a` twice.
 
-### Git Staging and Committing
-1. Open GitUI in a pane or window: `gui`
-2. In the **Status** view (`1`), select a file and press `Enter` to review the diff.
-3. Stage specific lines with `s`, or stage the entire file with `s` from the list.
-4. Press `c` to open the commit dialog, enter message, and press `Enter`.
-5. Press `p` to push changes to remote.
-6. Press `q` to return to shell.
+### 3. Terminal Mouse Reporting vs. Text Copying
+* Helix enables mouse reporting (`mouse = true`), allowing click-to-position and scroll wheel support.
+* Because the editor captures clicks, clicking URLs or selecting text with the mouse does not use the macOS clipboard by default.
+* **To bypass mouse capture**: Hold **`Shift`** (or `Cmd + Shift`) while dragging to select text with the native terminal, or while clicking a link to open it in your browser.
 
-### Project-Wide Rename
-1. In Helix, place the cursor on the symbol to rename.
-2. Press `F2` (or `Space + r`).
-3. Type the new name and press `Enter`.
-4. Save all modified buffers: `:wa`.
+### 4. Keep GitUI in a Dedicated Split Pane
+* Avoid repeatedly suspending Helix (`Ctrl + z`) or switching applications to perform Git operations.
+* Keep GitUI running permanently in the bottom-right Zellij pane. Jump over with `Ctrl + a` then `j` (or `l`), stage and commit, and jump back with `Ctrl + a` then `h`.
+
+### 5. LSP Renaming Affects In-Memory Buffers
+* When running `F2` (rename symbol), the language server modifies occurrences across all files where the symbol appears.
+* These files are loaded into Helix buffer memory but are not automatically written to disk.
+* Always run **`:wa`** (write all) after a rename to save changes across every modified file.
 
 ---
 
-## 9. Helix Tutor
+## 11. Fish Shell Abbreviations
 
-To run the built-in interactive tutorial:
+All workflow abbreviations expand interactively when pressing `Space` or `Enter`:
+
+| Abbreviation | Expands To | Purpose |
+| :--- | :--- | :--- |
+| `zj` | `zellij` | Launch Zellij terminal multiplexer |
+| `zja <name>` | `zellij attach -c <name>` | Attach to or create named session |
+| `zide` | `zellij --layout ide` | Launch Zellij with 3-pane IDE layout |
+| `zjl` | `zellij list-sessions` | List active sessions |
+| `zjk <name>` | `zellij kill-session <name>` | Terminate a session |
+| `zjd` | `zellij delete-all-sessions` | Clean up disconnected session cache |
+| `helix` / `h` | `hx` | Launch Helix modal editor |
+| `gui` | `gitui` | Open GitUI interface |
+| `j` | `just` | Run project tasks from `justfile` |
+| `pn` | `pnpm` | Package manager |
+| `pnd` | `pnpm dev` | Start development server |
+| `pns` | `pnpm storybook` | Start Storybook |
+| `pnt` | `pnpm test:dev` | Run test suite in watch mode |
+| `jq` | `jaq` | Fast Rust JSON query processor |
+
+---
+
+## 12. Modern CLI Utilities
+
+Classic UNIX tools (`cat`, `ls`, `find`, `sed`) date back decades and lack project awareness. Fish bridges standard commands to modern utilities via aliases and abbreviations.
+
+While execution speed is high, the primary benefits are sane defaults, Git awareness, and developer ergonomics:
+
+* **`.gitignore` & project awareness**: `fd` and `rg` ignore build directories (`node_modules/`, `dist/`) and `.git/` automatically, preventing slow recursive searches.
+* **Git integration**: `eza` displays file change status directly in directory lists (`ll`); `bat` shows git change markers in file gutters; `delta` highlights within-line word changes in diffs.
+* **Ergonomics**: `sd` eliminates incompatible macOS/Linux `sed -i` flags and esoteric escaping; `tldr` provides 5 practical examples instead of 50-page man pages.
+* **Destination jumping**: `zoxide` remembers directory frequency and recency, replacing repetitive `cd ../../` navigation with simple queries like `z <project>`.
+
+| Modern Tool | Replaces / Alias | Command | Primary Benefit |
+| :--- | :--- | :--- | :--- |
+| **ripgrep** | `grep` | `rg` | Skips `.gitignore` and `node_modules/`; multiline regex |
+| **fd** | `find` | `fd` | Friendly syntax; skips ignored and hidden files by default |
+| **bat** | `cat` | `bat` *(or `cat`)* | Syntax highlighting, line numbers, git diff gutter markers |
+| **eza** | `ls` | `eza` *(or `ls`, `ll`)* | Git modification status column, tree view (`lt`), file icons |
+| **delta** | `diff` | `delta` | Word-level diff highlighting, side-by-side split view |
+| **zoxide** | `cd` | `z`, `zi` | Fuzzy directory jumping (`z <query>`, `zi` for interactive picker) |
+| **sd** | `sed` | `sd` | Standard PCRE regex; consistent syntax across macOS and Linux |
+| **jaq** | `jq` | `jaq` *(or `jq`)* | Precise number handling and clearer error diagnostics |
+| **tealdeer** | `man` | `tldr` | Practical, task-oriented examples for fast copy-pasting |
+
+---
+
+## 13. Built-in Tutor
+
+Helix includes an interactive tutorial to practice motions directly in the terminal:
 ```sh
 hx --tutor
 ```

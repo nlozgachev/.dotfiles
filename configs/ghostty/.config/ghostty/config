@@ -9,6 +9,9 @@ theme = Tomorrow Night Blue
 window-padding-x = 0
 window-padding-y = 0
 
+# macOS Option Key as Alt (Meta for Zellij and Helix)
+macos-option-as-alt = true
+
 # Keybindings
 keybind = super+n=new_window
 keybind = super+f=toggle_fullscreen
