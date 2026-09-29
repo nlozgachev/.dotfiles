@@ -14,17 +14,22 @@ unlink:
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 
-# Install Homebrew (run once on a fresh machine before anything else)
+# Install Homebrew
 brew:
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install mise via official standalone script (brew has outdated versions)
+# Install mise
 mise-install:
     curl -fsSL https://mise.run | sh
     ~/.local/bin/mise completion fish > configs/fish/.config/fish/completions/mise.fish
 
+# Download zjstatus plugin
+zjstatus:
+    mkdir -p configs/zellij/.config/zellij/plugins
+    curl -fsSL -o configs/zellij/.config/zellij/plugins/zjstatus.wasm https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm
+
 # Install packages, fonts, and symlink configs
-setup: mise-install packages fonts link
+setup: mise-install packages fonts zjstatus link
 
 # ── Homebrew packages ─────────────────────────────────────────────────────────
 
@@ -35,7 +40,7 @@ packages:
         jaq zoxide tealdeer sd mdcat
     brew install --cask kitty
 
-# Refresh macOS Dock icon cache (updates custom icons)
+# Refresh macOS Dock icon cache
 dock-cache:
     rm -f /var/folders/*/*/*/com.apple.dock.iconcache
     killall Dock
@@ -52,7 +57,7 @@ node:
     mise use -g pnpm@latest
     mise reshim
 
-# Install frontend tools and LSPs for Helix (oxlint, oxfmt, vtsls TypeScript LSP, web LSPs)
+# Install frontend tools and LSPs
 frontend:
     npm add -g oxlint oxfmt typescript@5 @vtsls/language-server vscode-langservers-extracted yaml-language-server
 
@@ -141,7 +146,7 @@ gpg-agent:
 gpg-generate:
     gpg --full-generate-key
 
-# List secret keys with full fingerprints — copy the ID into ~/.gitconfig-local
+# List secret keys
 gpg-list:
     gpg --list-secret-keys --keyid-format=long
 

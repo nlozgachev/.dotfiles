@@ -6,10 +6,7 @@ set -gx GPG_TTY (tty)
 set -gx PNPM_HOME $HOME/.pnpm-global
 set -gx FILMS_DB $HOME/.bin/films.db
 
-# Bat theme (matches terminal Tomorrow Night Blue palette)
 set -gx BAT_THEME "base16-256"
-
-# ── Tomorrow Night Blue Syntax Highlighting ───────────────────────────────────
 set -g fish_color_normal normal
 set -g fish_color_command bbdaff
 set -g fish_color_quote d1f1a9

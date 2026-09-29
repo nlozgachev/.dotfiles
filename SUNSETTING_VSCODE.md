@@ -1,6 +1,6 @@
 # Terminal Development Setup: Kitty + Zellij + Helix + GitUI + Fish
 
-This guide is for developers transitioning from a VS Code-centric workflow to a terminal-first setup using Kitty, Zellij, Helix, GitUI, and Fish. The goal is to maintain persistent multi-pane project sessions, edit using modal selections, handle Git visually, and work efficiently without GUI IDE overhead.
+A guide to using Kitty, Zellij, Helix, GitUI, and Fish as a daily development environment on macOS. Covers workspace sessions, editing, Git staging, and keyboard shortcuts.
 
 ---
 
@@ -11,158 +11,146 @@ Open Kitty and run:
 ```sh
 zellij attach -c my-app
 ```
-*(Or use the alias `zj a -c my-app`). This connects to an existing session or creates a new persistent session if it does not exist.*
+*(Or use the alias `zj a -c my-app`). This connects to an existing session or creates a new one if it does not exist.*
 
-### 2. Set Up the 3-Pane Layout
-You can launch directly with the built-in 3-pane IDE layout:
-```sh
-zide
-```
-*(Expands to `zellij --layout ide`).*
+### 2. Default 3-Pane Layout
+Starting a session opens the default 3-pane layout (main editor 70% left, `Git` 50% top-right, `Terminal` 50% bottom-right).
 
-Or build the split manually from a single pane:
+You can also split or add panes manually at any time:
 1. Split vertical (left and right):
    ```
-   Ctrl + a  then  |
+   Ctrl + a  then  p  then  |
    ```
 2. Move focus to the right pane:
    ```
-   Ctrl + a  then  l
+   Ctrl + a  then  p  then  l
    ```
 3. Split the right pane horizontal (top and bottom):
    ```
-   Ctrl + a  then  -
+   Ctrl + a  then  p  then  -
    ```
 
 ### 3. Launch Tools in Their Panes
-* **Left pane (70%)**: Focus with `Ctrl + a` then `h`, then launch Helix:
+* **Left pane (70%)**: Focus with `Ctrl + a` → `p` → `h`, then launch Helix:
   ```sh
   hx .
   ```
-* **Top-right pane (30%)**: Focus with `Ctrl + a` then `l`, then start your dev server or test runner:
+* **Top-right pane (30%)**: Focus with `Ctrl + a` → `p` → `l`, then start your dev server or test runner:
   ```sh
   pnd     # pnpm run dev alias
   ```
-* **Bottom-right pane (30%)**: Focus with `Ctrl + a` then `j`, then launch GitUI:
+* **Bottom-right pane (30%)**: Focus with `Ctrl + a` → `p` → `j`, then launch GitUI:
   ```sh
   gui
   ```
 
-### 4. The 6 Essential Daily Shortcuts
+### 4. Essential Daily Shortcuts
 | Action | Shortcut | Details |
 | :--- | :--- | :--- |
 | **Open File** | `Cmd + P` *(or `Space + f`)* | Fuzzy file finder; type 2–3 letters |
-| **Global Search** | `Cmd + Shift + F` *(or `Space + /`)* | Live ripgrep search across repository |
-| **Save & Format** | `Cmd + S` *(or `:w`)* | Writes file and auto-formats via `oxfmt` |
-| **Switch Panes** | `Ctrl + a` then `h` / `j` / `k` / `l` | Move focus between editor, server, and git |
-| **Zoom Pane** | `Ctrl + a` then `z` | Maximize focused pane to 100%; press again to restore splits |
+| **Global Search** | `Cmd + Shift + F` *(or `Space + /`)* | Search across repository |
+| **Save & Format** | `Cmd + S` *(or `:w`)* | Saves file and formats with `oxfmt` |
+| **Switch Panes** | `Ctrl + a` → `p` → `h`/`j`/`k`/`l` | Move focus between editor, server, and git |
+| **Zoom Pane** | `Ctrl + a` → `p` → `z` | Maximize focused pane; press again to restore |
 | **Stage Changes** | In GitUI: `Enter` on file → `s` | Stages selected line or hunk into commit |
 
 ---
 
-## 2. Architecture & Tool Roles
+## 2. Tools Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  Kitty (Terminal Emulator)                  │
-│  └─ Window frame, font rendering, macOS Cmd key bridging    │
+│  └─ Window, font rendering, macOS Cmd shortcuts             │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│           Zellij (Persistent Sessions, Tabs, Splits)        │
-│  ├─ Tab 1: "editor" (Main Workspace)                        │
+│           Zellij (Sessions, Tabs, Splits)                   │
+│  ├─ Tab 1: Default Workspace                                │
 │  │   ├─ Left Pane (70%): Helix Editor                       │
 │  │   ├─ Top-Right (30%): Dev Server / Watcher               │
 │  │   └─ Bottom-Right (30%): GitUI                           │
-│  ├─ Tab 2: "servers" (Background Daemons / Logs)            │
-│  └─ Floating Pane: Scratch terminal (toggle with Ctrl+a w)  │
+│  ├─ Tab 2: Secondary Tasks                                  │
+│  └─ Floating Pane: Scratch terminal (Ctrl+a -> p -> w)      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-| Component | Tool in Setup | Primary Responsibility | Replaces in VSCode |
-| :--- | :--- | :--- | :--- |
-| **Terminal Emulator** | **Kitty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging | VSCode application window frame |
-| **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, persistent tiled & floating panes | Split editors, layout management, terminal panel |
-| **Modal Editor** | **Helix** | Selection-first editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) | Monaco editor, LSP extensions, Prettier |
-| **Git Interface** | **GitUI** | Interactive staging, line-by-line diffs, commit history, branches | Source Control panel, GitLens |
-| **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow aliases (`gui`, `zj`, `pnd`, `pn`) | Integrated terminal shell |
+| Component | Tool in Setup | Role |
+| :--- | :--- | :--- |
+| **Terminal Emulator** | **Kitty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging |
+| **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, tiled and floating split panes |
+| **Modal Editor** | **Helix** | Text editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) |
+| **Git Interface** | **GitUI** | Terminal-based staging, line-by-line diffs, commit history, branches |
+| **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow abbreviations (`gui`, `zj`, `pnd`) |
 
-### Why Each Tool Was Chosen (Architectural Rationale)
+### Why These Tools
 
-Each component in this stack was selected according to specific technical merits:
-
-* **Terminal Emulator (Kitty)**:
-  * **C + OpenGL GPU Pipeline**: Offloads text rasterization and rendering directly to shaders, ensuring sub-5ms input latency and native 120Hz ProMotion support without frame stutter.
-  * **Zero Visual Clutter**: Operates strictly as a high-performance text canvas. It introduces no forced GUI elements, tabs, or drag handles, leaving all window splitting and layout management to Zellij.
-  * **Production Stability**: A mature, battle-tested codebase (8+ years) with comprehensive support for font ligatures, custom glyphs, and unified configuration.
-
-* **Workspace Multiplexer (Zellij)**:
-  * **Session Persistence**: Decouples processes from terminal windows. Compilers, dev servers, and test suites run in background daemons that survive terminal restarts and disconnects.
-  * **Declarative Layouts**: Tiled splits are managed via deterministic text layouts (`.kdl`), providing predictable 70/30 IDE splits without relying on window manager hacks.
-  * **Clean Context Switching**: TUI-native tabs and floating scratchpads organize project concerns with zero desktop window sprawl.
-
-* **Modal Editor (Helix)**:
-  * **Selection-First Paradigm**: Follows a visual selection-action model (`select -> verify -> act`). You see exactly what text will change before issuing an edit, reducing cognitive overhead.
-  * **Built-in Language Intelligence**: Native Language Server Protocol (LSP), Tree-sitter syntax parsing, and code formatting are integrated directly into a single binary, eliminating plugin management drift and extension conflicts.
-  * **Instant Startup**: Zero startup delay and minimal memory consumption, maintaining identical performance regardless of project size.
-
-* **Git Interface (GitUI)**:
-  * **Line & Hunk Staging**: Provides sub-second keyboard staging, hunk splitting, and interactive diff inspection without leaving the terminal or opening heavy GUI applications.
-  * **Contextual Co-location**: Resides permanently in a dedicated 30% split pane, allowing instant transitions between writing code and committing changes.
-
-* **Interactive Shell (Fish)**:
-  * **Prompt Abbreviation (`abbr`)**: Expands shortcuts in-place upon pressing Space, ensuring shell history records the canonical, portable command while preserving native flag autocompletions.
-  * **Out-of-the-Box Ergonomics**: Syntax highlighting and history-driven autosuggestions work immediately without third-party plugin frameworks.
-
-* **Modern CLI Utilities (`rg`, `fd`, `bat`, `eza`, `delta`, `zoxide`, `sd`, `jaq`, `tldr`)**:
-  * **Project Awareness**: Default exclusion of `.gitignore` entries, hidden files, and build directories (`node_modules/`, `dist/`).
-  * **Git-Aware Output**: Gutter change indicators in files (`bat`), modification columns in directory trees (`eza`), and character-level inline diff highlights (`delta`).
-  * **Cross-Platform Uniformity**: Replaces divergent OS flags with standard, predictable syntax (`sd` replacing `sed -i` quirks).
+* **Kitty**: Fast GPU rendering on macOS and straightforward key mapping for `Cmd` shortcuts (`Cmd + S`, `Cmd + P`, etc.).
+* **Zellij**: Keeps dev servers and editor sessions running in the background across terminal disconnects, with layouts defined in plain text files.
+* **Helix**: Includes LSP support, syntax highlighting, and code formatting out of the box without requiring extra plugins.
+* **GitUI**: Fast keyboard-driven interface for inspecting diffs and staging hunks without leaving the terminal.
+* **Fish**: Helpful autosuggestions and abbreviations that expand in-place.
+* **CLI Utilities (`rg`, `fd`, `bat`, `eza`, `delta`, `zoxide`)**: Fast command-line tools that respect `.gitignore` and show Git status by default.
 
 ---
 
 ## 3. Zellij: Workspaces, Tabs, and Panes
 
-Zellij is configured with a **simplified UI** (`simplified_ui true`) and the Tomorrow Night Blue palette. It displays regular text dividers and boxes without arrow-styled powerline fonts, while keeping on-screen key-helpers visible at the bottom.
+Zellij uses the Tomorrow Night Blue palette with a 3-pane layout: the main editor pane takes 70% on the left, with `Git` (top) and `Terminal` (bottom) taking the remaining 30% on the right.
 
-To avoid conflicts with Helix's `Cmd + P` (`Ctrl + p` file picker) and `Cmd + S` (`Ctrl + s` save), Zellij uses **`Ctrl + a`** as its leader prefix.
+### Pane Frames & Status Bar
+* **Active vs. Inactive Panes**: The focused pane has a warm gold border (`#ffeead`), while inactive panes use dark navy (`#183d6e`).
+* **Key Guide**: Pressing `Ctrl + a` shows available categories at the bottom (`p:pane`, `t:tab`, `r:resize`, `m:move`, `s:scroll`, `d:detach`, `q:quit`). Entering a category shows its specific keys.
+* **Key Routing**: Pane actions route through `p` (e.g. `Ctrl + a` → `p`), and tab actions route through `t`.
 
 ### Sessions (Project Workspaces)
 Sessions persist in the background across disconnects and terminal restarts.
 
 | Action | Command / Shortcut | Description |
 | :--- | :--- | :--- |
-| **New or attach session** | `zellij attach -c <name>` | Connect to existing session or create it |
+| **New or attach session** | `zellij attach -c <name>` | Connect to existing session or create it (opens 3-pane default layout) |
 | **Short alias** | `zj a -c <name>` | Quick attach/create alias |
-| **Detach session** | `Ctrl + a` then `d` | Leave session running in background |
+| **Detach session** | `Ctrl + a` → `d` | Leave session running in background |
 | **List active sessions** | `zellij ls` *(or `zj ls`)* | Show all active sessions |
 | **Kill session** | `zellij k <name>` | Terminate a session and its processes |
 | **Delete dead sessions** | `zellij delete-all-sessions` | Clean up inactive session cache |
+| **Quit Zellij** | `Ctrl + q` *(or `Ctrl + a` → `q`)* | Exit session and terminate all running processes |
 
 ### Tabs (Virtual Workspaces)
-Tabs appear along the top bar with clean brackets and numbers.
+Tabs appear along the bottom status bar with clean numbering. All tab management routes through `Ctrl + a` then `t`:
 
 | Action | Shortcut | Description |
 | :--- | :--- | :--- |
-| **New tab** | `Ctrl + a` then `c` | Open a new tab |
-| **Switch to tab N** | `Ctrl + a` then `1` / `2` / `3` / `4` / `5` | Switch directly to tab index |
-| **Next / Prev tab** | `Ctrl + t` then `n` / `p` *(or `Right`/`Left`)* | Cycle through tabs in Tab mode |
-| **Rename tab** | `Ctrl + t` then `r` | Rename the active tab |
-| **Close tab** | `Ctrl + t` then `x` | Close current tab |
+| **New tab** | `Ctrl + a` → `t` → `c` | Open a new tab |
+| **Switch to tab N** | `Ctrl + a` → `t` → `1` .. `9` | Switch directly to tab index |
+| **Next / Prev tab** | `Ctrl + a` → `t` → `Tab` / `p` | Cycle through tabs |
+| **Rename tab** | `Ctrl + a` → `t` → `,` | Rename the active tab (`Enter` to save, `Esc` to cancel) |
+| **Close tab** | `Ctrl + a` → `t` → `x` | Close the current tab |
 
-### Panes (Tiled & Floating Splits)
-Panes divide the window into multiple active terminal regions.
+### Panes & Navigation (Tiled & Floating Splits)
+Panes divide the window into active terminal regions. All pane management routes through `Ctrl + a` then `p`:
 
 | Action | Shortcut | Description |
 | :--- | :--- | :--- |
-| **Split vertical** | `Ctrl + a` then `\|` | Split pane left and right |
-| **Split horizontal** | `Ctrl + a` then `-` | Split pane top and bottom |
-| **Navigate panes** | `Ctrl + a` then `h` / `j` / `k` / `l` | Move focus left, down, up, or right |
-| **Toggle zoom** | `Ctrl + a` then `z` | Maximize current pane to 100% (press again to restore) |
-| **Toggle floating pane** | `Ctrl + a` then `w` | Toggle a floating scratch pane over your layout |
-| **Close focused pane** | `Ctrl + a` then `x` *(or `Ctrl + d`)* | Close active pane |
-| **Resize mode** | `Ctrl + a` then `r` *(or `Ctrl + n`)* | Enter resize mode; use `h/j/k/l` or `+/-` to resize |
-| **Move / Reorder mode** | `Ctrl + a` then `m` *(or `Ctrl + h`)* | Enter move mode to swap pane positions |
+| **Split vertical** | `Ctrl + a` → `p` → `\|` | Split pane left and right |
+| **Split horizontal** | `Ctrl + a` → `p` → `-` | Split pane top and bottom |
+| **New unconstrained pane** | `Ctrl + a` → `p` → `n` | Create a new pane in default orientation |
+| **Navigate panes** | `Ctrl + a` → `p` → `h` / `j` / `k` / `l` *(or arrows)* | Move focus left, down, up, or right |
+| **Cycle focus** | `Ctrl + a` → `p` → `o` | Move focus to the next pane |
+| **Toggle zoom** | `Ctrl + a` → `p` → `z` | Maximize current pane to 100% (press again to restore) |
+| **Toggle floating pane** | `Ctrl + a` → `p` → `w` | Toggle a floating scratch pane over layout |
+| **Close focused pane** | `Ctrl + a` → `p` → `x` | Close active pane |
+
+### Modes & Utilities
+Dedicated modal states provide interactive manipulation without key collisions:
+
+| Action | Shortcut | Description |
+| :--- | :--- | :--- |
+| **Resize mode** | `Ctrl + a` → `r` | Enter resize mode (`h/j/k/l` grow, `H/J/K/L` shrink, `+/-`, `Esc` done) |
+| **Move / Swap mode** | `Ctrl + a` → `m` | Enter swap mode (`h/j/k/l` swap, `n/p` cycle, `Esc` done) |
+| **Scroll / Copy mode** | `Ctrl + a` → `s` | Enter scrollback history (`j/k`, `u/d` half page, `/` search, `e` edit, `q/Esc` exit) |
+| **Help modal** | `Ctrl + a` → `?` | Open interactive Zellij keybinding & configuration browser |
+| **Send literal Ctrl+A** | `Ctrl + a` → `Ctrl + a` | Pass `Ctrl + a` to shell/editor (e.g. jump to line start) |
 
 ---
 
@@ -266,7 +254,7 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 * **Replace surround**: Inside quoted text, press `mr"'` (replaces `"` with `'`).
 * **Delete surround**: Inside quoted text, press `md"` (removes surrounding quotes).
 
-### Code Intelligence (LSP & Diagnostics)
+### LSP & Diagnostics
 
 | Shortcut | Action | Description |
 | :--- | :--- | :--- |
@@ -277,7 +265,7 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 | `Space + d` | File Diagnostics | List errors and warnings in current file |
 | `Space + D` | Workspace Diagnostics | List errors and warnings across the project |
 | `]d` / `[d` | Next / Prev Error | Jump directly to next or previous diagnostic |
-| `F2` *(or `Space + r`)* | Rename Symbol | Semantic project-wide rename (commit with `:wa`) |
+| `F2` *(or `Space + r`)* | Rename Symbol | Project-wide rename (commit with `:wa`) |
 | `Cmd + S` *(or `:format`)* | Format File | Format file using configured formatter (`oxfmt`) |
 
 ### Buffer & File Management
@@ -333,10 +321,10 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 
 ## 7. Opening Links and URLs in Code
 
-Terminal applications with mouse capture enabled intercept standard clicks. To open URLs:
+To open links in your browser:
 
-* **From Helix (`gf`)**: Place the cursor anywhere on the URL and press `gf` (goto_file). Helix detects the `https://` protocol and opens the address in your default macOS browser.
-* **From Kitty (`Cmd + Click` or `Shift + Click`)**: Hold `Cmd` or `Shift` while clicking any link to open it directly in your browser.
+* **From Helix (`gf`)**: Place cursor on any URL and press `gf` (go to file). Helix opens it in your default browser.
+* **From Kitty (`Cmd + Click` or `Shift + Click`)**: Hold `Cmd` or `Shift` while clicking any link.
 
 ---
 
@@ -344,8 +332,8 @@ Terminal applications with mouse capture enabled intercept standard clicks. To o
 
 | VSCode Feature / Action | VSCode Shortcut | Terminal Equivalent | Details |
 | :--- | :--- | :--- | :--- |
-| **File Picker** | `Cmd + P` | `Cmd + P` / `Space + f` | Interactive fuzzy search by filename |
-| **Global Text Search** | `Cmd + Shift + F` | `Cmd + Shift + F` / `Space + /` | Real-time ripgrep search across files |
+| **File Picker** | `Cmd + P` | `Cmd + P` / `Space + f` | Fuzzy search by filename |
+| **Global Text Search** | `Cmd + Shift + F` | `Cmd + Shift + F` / `Space + /` | Search across files |
 | **Save & Format** | `Cmd + S` | `Cmd + S` / `:w` | Writes buffer and auto-formats (`oxfmt`) |
 | **Hover Types & Docs** | Hover / `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signatures and documentation |
 | **Code Actions & Fixes** | `Cmd + .` | `Space + a` | Quick fixes, imports, linter actions |
@@ -356,8 +344,8 @@ Terminal applications with mouse capture enabled intercept standard clicks. To o
 | **Toggle Line Comment** | `Cmd + /` | `Cmd + /` / `Ctrl + c` | Comments/uncomments line or selection |
 | **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
 | **Multi-Cursor Next** | `Cmd + D` | `x` → `s` → `Enter` | Select lines, regex match, edit with `c` |
-| **Git Status & Staging** | `Cmd + Shift + G` | `gui` (GitUI) | Dedicated visual staging and diff viewer |
-| **Terminal Drawer / Split** | `Ctrl + ` ` / `Cmd + J` | `Ctrl + a` then `-` / `Ctrl + a` then `w` | Tiled split or floating scratch pane in Zellij |
+| **Git Status & Staging** | `Cmd + Shift + G` | `gui` (GitUI) | Staging and diff viewer in side pane |
+| **Terminal Split / Float** | `Ctrl + ` ` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split pane or floating scratch pane in Zellij |
 | **Buffer Tabs** | Tab click | `Tab` / `Shift + Tab` | Cycles through open buffer tabs |
 | **Close Tab** | `Cmd + W` | `Alt + w` / `:bc` | Closes active buffer tab |
 | **Command Palette** | `Cmd + Shift + P` | `Cmd + Shift + P` / `Space + ?` | Searchable palette of all editor commands |
@@ -375,19 +363,15 @@ Configured in [`configs/kitty/.config/kitty/kitty.conf`](file:///Users/nikita/Pr
 * **`Cmd + Shift + F`**: Global search (`Space + /`)
 
 ### 2. Option Key as Alt (`macos_option_as_alt yes`)
-By default on macOS, terminal emulators treat the physical `⌥ Option` key as a character accent composer (typing symbols like `å`, `ç`, `ƒ`) rather than ANSI `Alt` / `Meta` escape sequences.
-Kitty is configured with:
+By default on macOS, the `⌥ Option` key types special characters (such as `å` or `ç`) instead of standard `Alt` escape sequences. Kitty is configured with:
 ```ini
 macos_option_as_alt yes
 ```
-This maps the physical `⌥ Option` key directly to terminal `Alt`:
-* **In Zellij**: `Alt + n` (new pane), `Alt + h/j/k/l` (switch pane), `Alt + [` / `Alt + ]` (cycle tabs), `Alt + f` (floating toggle).
-* **In Helix**: `Alt + s` (split selection across lines), `Alt + w` (close buffer), `Alt + x` (command palette).
-* **Alternative**: Zellij also provides the `Ctrl + a` leader prefix (`Ctrl + a` then `h/j/k/l`, `|`, `-`, `z`, `w`), which requires no `Alt` key at all.
+This allows using `Option` as `Alt` in Helix (such as `Alt + s` to split selections, `Alt + w` to close a buffer, and `Alt + x` for the command palette).
 
-### 3. Thumb-Driven `Space` Leader Key
-Most Helix commands start with `Space`, keeping actions within reach from the home row:
-* `Space + f`: Open file picker
+### 3. Helix Space Shortcuts
+Most common Helix shortcuts start with `Space`:
+* `Space + f`: File picker
 * `Space + /`: Global search
 * `Space + ?`: Command palette
 * `Space + b`: Switch buffers
@@ -397,31 +381,28 @@ Most Helix commands start with `Space`, keeping actions within reach from the ho
 * `Space + k`: Type inspection
 
 ### 4. Recommended: Remap Caps Lock to Control
-Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `Ctrl + d` scroll) are significantly easier to reach when mapped to the home row:
+Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `Ctrl + d` scroll) are easier to reach when mapped to Caps Lock:
 1. Open **macOS System Settings** → **Keyboard** → **Keyboard Shortcuts…** → **Modifier Keys**.
 2. Select your keyboard, and change **Caps Lock Key** to **Control**.
 
 ---
 
-## 10. Gotchas & Terminal Nuances
+## 10. Gotchas & Tips
 
-### 1. Zellij `Ctrl + a` Leader Pass-Through
-* `Ctrl + a` is the configured leader key for Zellij to prevent collisions with Helix's `Cmd + P` (`Ctrl + p`) and `Cmd + S` (`Ctrl + s`).
+### 1. Zellij Ctrl+A Pass-Through
+* `Ctrl + a` is the leader key for Zellij.
 * To send a literal `Ctrl + a` to a shell or inner SSH session, press `Ctrl + a` twice.
 
-### 3. Terminal Mouse Reporting vs. Text Copying
-* Helix enables mouse reporting (`mouse = true`), allowing click-to-position and scroll wheel support.
-* Because the editor captures clicks, clicking URLs or selecting text with the mouse does not use the macOS clipboard by default.
-* **To bypass mouse capture**: Hold **`Shift`** (or `Cmd + Shift`) while dragging to select text with the native terminal, or while clicking a link to open it in your browser.
+### 2. Mouse Selection vs. Copying
+* Helix has mouse support enabled for clicking and scrolling.
+* To select text with the native terminal or click links directly, hold **`Shift`** (or `Cmd + Shift`) while selecting or clicking.
 
-### 4. Keep GitUI in a Dedicated Split Pane
-* Avoid repeatedly suspending Helix (`Ctrl + z`) or switching applications to perform Git operations.
-* Keep GitUI running permanently in the bottom-right Zellij pane. Jump over with `Ctrl + a` then `j` (or `l`), stage and commit, and jump back with `Ctrl + a` then `h`.
+### 3. Use GitUI in the Split Pane
+* Keep GitUI running in the bottom-right pane. Switch to it with `Ctrl + a` → `p` → `j`, stage and commit, and return with `Ctrl + a` → `p` → `h`.
 
-### 5. LSP Renaming Affects In-Memory Buffers
-* When running `F2` (rename symbol), the language server modifies occurrences across all files where the symbol appears.
-* These files are loaded into Helix buffer memory but are not automatically written to disk.
-* Always run **`:wa`** (write all) after a rename to save changes across every modified file.
+### 4. LSP Renaming Affects In-Memory Buffers
+* When running `F2` (rename symbol), Helix modifies the symbol across open buffers.
+* Run **`:wa`** (write all) afterward to save all modified files to disk.
 
 ---
 
@@ -451,14 +432,12 @@ All workflow abbreviations expand interactively when pressing `Space` or `Enter`
 
 ## 12. Modern CLI Utilities
 
-Classic UNIX tools (`cat`, `ls`, `find`, `sed`) date back decades and lack project awareness. Fish bridges standard commands to modern utilities via aliases and abbreviations.
+Standard commands are aliased to modern alternatives with helpful defaults, Git awareness, and simpler syntax:
 
-While execution speed is high, the primary benefits are sane defaults, Git awareness, and developer ergonomics:
-
-* **`.gitignore` & project awareness**: `fd` and `rg` ignore build directories (`node_modules/`, `dist/`) and `.git/` automatically, preventing slow recursive searches.
-* **Git integration**: `eza` displays file change status directly in directory lists (`ll`); `bat` shows git change markers in file gutters; `delta` highlights within-line word changes in diffs.
-* **Ergonomics**: `sd` eliminates incompatible macOS/Linux `sed -i` flags and esoteric escaping; `tldr` provides 5 practical examples instead of 50-page man pages.
-* **Destination jumping**: `zoxide` remembers directory frequency and recency, replacing repetitive `cd ../../` navigation with simple queries like `z <project>`.
+* **Ignoring build folders**: `fd` and `rg` skip `node_modules/`, `dist/`, and `.git/` automatically.
+* **Git status**: `eza` shows file changes in directory listings (`ll`), `bat` shows diff markers in file margins, and `delta` highlights line diffs.
+* **Simpler syntax**: `sd` uses standard regex across platforms (replacing `sed -i` quirks), and `tldr` shows concise examples for common commands.
+* **Directory jumping**: `zoxide` tracks frequently used directories, allowing jumps like `z <project>` instead of typing full paths.
 
 | Modern Tool | Replaces / Alias | Command | Primary Benefit |
 | :--- | :--- | :--- | :--- |

@@ -45,7 +45,6 @@ abbr -a gui gitui
 # Zellij
 abbr -a zj zellij
 abbr -a zja "zellij attach -c"
-abbr -a zide "zellij --layout ide"
 abbr -a zjl "zellij list-sessions"
 abbr -a zjk "zellij kill-session"
 abbr -a zjd "zellij delete-all-sessions"

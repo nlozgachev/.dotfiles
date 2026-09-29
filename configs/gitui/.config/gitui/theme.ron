@@ -1,4 +1,3 @@
-// Tomorrow Night Blue theme for GitUI
 (
     selected_tab: Some("#ffeead"),
     command_fg: Some("#ffffff"),

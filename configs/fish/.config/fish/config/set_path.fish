@@ -13,12 +13,10 @@ fish_add_path $HOME/go/bin
 # pnpm
 fish_add_path $PNPM_HOME
 
-# mise version manager
 if status is-interactive
   mise activate fish | source
 else
   mise activate fish --shims | source
 end
 
-# fzf key bindings and fuzzy completion
 fzf --fish | source

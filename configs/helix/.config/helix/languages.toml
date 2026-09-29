@@ -1,11 +1,9 @@
 # ── Language Servers ──────────────────────────────────────────────────────────
 
-# Oxlint: high-performance JavaScript / TypeScript linter LSP
 [language-server.oxlint]
 command = "oxlint"
 args = ["--lsp"]
 
-# Vtsls: high-performance TypeScript/JavaScript LSP powered by VSCode's TypeScript extension
 [language-server.vtsls]
 command = "vtsls"
 args = ["--stdio"]
@@ -42,7 +40,6 @@ propertyDeclarationTypes.enabled = true
 functionLikeReturnTypes.enabled = true
 enumMemberValues.enabled = true
 
-# VSCode Extracted Language Servers (HTML, CSS, JSON)
 [language-server.vscode-html-language-server]
 command = "vscode-html-language-server"
 args = ["--stdio"]
@@ -58,7 +55,6 @@ command = "vscode-json-language-server"
 args = ["--stdio"]
 config = { provideFormatter = false }
 
-# Python: Ruff (fast linter and formatter) + Pyright (type checking)
 [language-server.ruff]
 command = "ruff"
 args = ["server"]
@@ -67,17 +63,15 @@ args = ["server"]
 command = "pyright-langserver"
 args = ["--stdio"]
 
-# Markdown: Marksman
 [language-server.marksman]
 command = "marksman"
 args = ["server"]
 
-# YAML: yaml-language-server
 [language-server.yaml-language-server]
 command = "yaml-language-server"
 args = ["--stdio"]
 
-# ── Language Configurations & Format-on-Save ──────────────────────────────────
+# ── Language Configurations ──────────────────────────────────────────────────
 
 # TypeScript
 [[language]]
