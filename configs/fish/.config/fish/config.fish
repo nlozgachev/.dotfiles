@@ -4,6 +4,11 @@ source $config_dir/set_shell_vars.fish
 source $config_dir/set_aliases.fish
 source $config_dir/set_path.fish
 
+# Initialize zoxide (smart directory jumping)
+if type -q zoxide
+    zoxide init fish | source
+end
+
 # Machine-specific config: env vars, secrets, work tools (not tracked in repo)
 # See README for details
 if test -f ~/.config/fish/local.fish
