@@ -58,6 +58,7 @@ keybinds clear-defaults=true {
         bind "|" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "-" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "n" { NewPane; SwitchToMode "Normal"; }
+        bind "," "c" { SwitchToMode "RenamePane"; PaneNameInput 0; }
         bind "z" "Ctrl z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
         bind "x" "Ctrl x" { CloseFocus; SwitchToMode "Normal"; }
         bind "w" "Ctrl w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
@@ -115,6 +116,11 @@ keybinds clear-defaults=true {
 
     renametab {
         bind "Esc" { UndoRenameTab; SwitchToMode "Normal"; }
+        bind "Enter" { SwitchToMode "Normal"; }
+    }
+
+    renamepane {
+        bind "Esc" { UndoRenamePane; SwitchToMode "Normal"; }
         bind "Enter" { SwitchToMode "Normal"; }
     }
 

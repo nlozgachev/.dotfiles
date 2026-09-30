@@ -1,5 +1,4 @@
-alias v=$EDITOR
-alias vim=$EDITOR
+alias ed=$EDITOR
 
 alias g="git"
 alias ga="git add"
@@ -34,31 +33,39 @@ abbr -a pnd pnpm dev
 abbr -a pns pnpm storybook
 abbr -a pnt pnpm test:dev
 
-# ── Tool Abbreviations ────────────────────────────────────────────────────────
-# Helix
-abbr -a helix hx
-abbr -a h hx
+# ── Tools ──────────────────────────────────────────────────
+alias gg="gitui"
+alias md="mdcat"
+alias jq="jaq"
 
-# GitUI
-abbr -a gui gitui
+function ws --description "Workspace manager: resume latest session or attach/create named session"
+    if test (count $argv) -gt 0
+        switch $argv[1]
+            case ls list
+                zellij list-sessions
+            case k kill
+                if test (count $argv) -gt 1
+                    zellij kill-session $argv[2]
+                else
+                    zellij kill-session
+                end
+            case da "delete-all"
+                zellij delete-all-sessions
+            case "-*"
+                zellij $argv
+            case '*'
+                zellij attach -c $argv[1]
+        end
+    else
+        set -l sessions (zellij list-sessions -s 2>/dev/null)
+        if test (count $sessions) -gt 0
+            zellij attach $sessions[1]
+        else
+            zellij
+        end
+    end
+end
 
-# Zellij
-abbr -a zj zellij
-abbr -a zja "zellij attach -c"
-abbr -a zjl "zellij list-sessions"
-abbr -a zjk "zellij kill-session"
-abbr -a zjd "zellij delete-all-sessions"
-
-# Just runner
-abbr -a j just
-
-# JSON query
-abbr -a jq jaq
-
-# Markdown viewer
-abbr -a md mdcat
-
-# CLI utilities
 alias ls="eza --icons"
 alias ll="eza -la --icons --git"
 alias lt="eza --tree --icons"

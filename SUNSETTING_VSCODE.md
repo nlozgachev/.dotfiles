@@ -9,9 +9,9 @@ A guide to using Kitty, Zellij, Helix, GitUI, and Fish as a daily development en
 ### 1. Start or Reconnect to a Project Workspace
 Open Kitty and run:
 ```sh
-zellij attach -c my-app
+ws my-app
 ```
-*(Or use the alias `zj a -c my-app`). This connects to an existing session or creates a new one if it does not exist.*
+*(Or simply `ws` to auto-resume your most recent workspace).*
 
 ### 2. Default 3-Pane Layout
 Starting a session opens the default 3-pane layout (main editor 70% left, `Git` 50% top-right, `Terminal` 50% bottom-right).
@@ -31,17 +31,17 @@ You can also split or add panes manually at any time:
    ```
 
 ### 3. Launch Tools in Their Panes
-* **Left pane (70%)**: Focus with `Ctrl + a` → `p` → `h`, then launch Helix:
+* **Left pane (70%)**: Focus with `Ctrl + a` → `p` → `h`, then launch the editor:
   ```sh
-  hx .
+  ed .
   ```
 * **Top-right pane (30%)**: Focus with `Ctrl + a` → `p` → `l`, then start your dev server or test runner:
   ```sh
-  pnd     # pnpm run dev alias
+  pnd     # pnpm dev abbreviation
   ```
-* **Bottom-right pane (30%)**: Focus with `Ctrl + a` → `p` → `j`, then launch GitUI:
+* **Bottom-right pane (30%)**: Focus with `Ctrl + a` → `p` → `j`, then launch the Git interface:
   ```sh
-  gui
+  gg
   ```
 
 ### 4. Essential Daily Shortcuts
@@ -52,7 +52,7 @@ You can also split or add panes manually at any time:
 | **Save & Format** | `Cmd + S` *(or `:w`)* | Saves file and formats with `oxfmt` |
 | **Switch Panes** | `Ctrl + a` → `p` → `h`/`j`/`k`/`l` | Move focus between editor, server, and git |
 | **Zoom Pane** | `Ctrl + a` → `p` → `z` | Maximize focused pane; press again to restore |
-| **Stage Changes** | In GitUI: `Enter` on file → `s` | Stages selected line or hunk into commit |
+| **Stage Changes** | In GitUI: `Enter` on file | Stages highlighted file (`→` into diff to stage hunks/lines) |
 
 ---
 
@@ -81,7 +81,7 @@ You can also split or add panes manually at any time:
 | **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, tiled and floating split panes |
 | **Modal Editor** | **Helix** | Text editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) |
 | **Git Interface** | **GitUI** | Terminal-based staging, line-by-line diffs, commit history, branches |
-| **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow abbreviations (`gui`, `zj`, `pnd`) |
+| **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow shortcuts (`ws`, `ed`, `gg`, `pnd`) |
 
 ### Why These Tools
 
@@ -108,12 +108,12 @@ Sessions persist in the background across disconnects and terminal restarts.
 
 | Action | Command / Shortcut | Description |
 | :--- | :--- | :--- |
-| **New or attach session** | `zellij attach -c <name>` | Connect to existing session or create it (opens 3-pane default layout) |
-| **Short alias** | `zj a -c <name>` | Quick attach/create alias |
-| **Detach session** | `Ctrl + a` → `d` | Leave session running in background |
-| **List active sessions** | `zellij ls` *(or `zj ls`)* | Show all active sessions |
-| **Kill session** | `zellij k <name>` | Terminate a session and its processes |
-| **Delete dead sessions** | `zellij delete-all-sessions` | Clean up inactive session cache |
+| **Resume latest workspace** | `ws` | Auto-attach to most recent session (or start fresh default layout) |
+| **Attach or create named workspace** | `ws <name>` | Connect to existing workspace or create it |
+| **List active workspaces** | `ws ls` | Show all active workspaces |
+| **Kill workspace** | `ws k <name>` | Terminate a workspace and its processes |
+| **Delete dead workspaces** | `ws da` | Clean up inactive session cache |
+| **Detach workspace** | `Ctrl + a` → `d` | Leave workspace running in background |
 | **Quit Zellij** | `Ctrl + q` *(or `Ctrl + a` → `q`)* | Exit session and terminate all running processes |
 
 ### Tabs (Virtual Workspaces)
@@ -139,6 +139,7 @@ Panes divide the window into active terminal regions. All pane management routes
 | **Cycle focus** | `Ctrl + a` → `p` → `o` | Move focus to the next pane |
 | **Toggle zoom** | `Ctrl + a` → `p` → `z` | Maximize current pane to 100% (press again to restore) |
 | **Toggle floating pane** | `Ctrl + a` → `p` → `w` | Toggle a floating scratch pane over layout |
+| **Rename pane** | `Ctrl + a` → `p` → `,` | Rename focused pane (`Enter` to save, `Esc` to cancel) |
 | **Close focused pane** | `Ctrl + a` → `p` → `x` | Close active pane |
 
 ### Modes & Utilities
@@ -158,40 +159,54 @@ Dedicated modal states provide interactive manipulation without key collisions:
 
 Launch GitUI in any pane or window:
 ```sh
-gui
+gg
 ```
 
 ### Views
-Switch views using **`1`**, **`2`**, **`3`**, **`4`** (or `Tab` / `Shift + Tab`):
+Switch views using **`1`**, **`2`**, **`3`**, **`4`**, **`5`** (or `Tab` / `Shift + Tab`):
 
 * **`1` Status**: Working tree modifications, untracked files, and staging.
 * **`2` Log**: Commit history, author and date metadata, and branch graphs.
 * **`3` Files**: File tree at `HEAD` to inspect repository contents.
-* **`4` Stashing**: Stash management (inspect, apply, and drop).
+* **`4` Stashing**: Stash management (save, apply, and drop).
+* **`5` Stashes**: Inspect saved stashes.
 
 ### Keybindings Reference
 
 | Action | Key | Description |
 | :--- | :--- | :--- |
-| **Stage / Unstage File** | `s` / `u` | Stage or unstage the highlighted file |
+| **Navigate** | `↑` / `↓` / `←` / `→` | Move between items and panels |
+| **Switch Work Area** | `w` | Jump focus between Unstaged and Staged changes |
+| **Stage / Unstage File** | `Enter` | Stage or unstage the highlighted file |
 | **Stage All** | `a` | Stage all unstaged changes across repository |
-| **Discard Changes** | `D` *(Shift + d)* | Prompts to discard changes in file or selected hunk |
-| **Commit** | `c` | Open commit message editor |
-| **Amend Commit** | `c` then toggle amend | Add staged changes to previous commit |
-| **Push** | `p` | Push committed changes to remote branch |
-| **Pull** | `P` *(Shift + p)* | Pull incoming commits from remote |
-| **Fetch** | `f` | Fetch remote references |
-| **Branch Menu** | `b` | Switch branch, checkout, or create new branch |
-| **Tag Menu** | `t` | Create or delete tags |
-| **Help Menu** | `?` | Interactive keymap overview |
-| **Quit** | `q` | Exit GitUI back to shell |
+| **Discard Changes** | `D` *(Shift + d)* | Prompts to discard changes in file or hunk |
+| **Ignore File** | `i` | Add selected file to `.gitignore` |
+| **Focus Diff Viewer** | `→` *(Right arrow)* | Move focus into the diff pane for selected file |
+| **Return to File List** | `←` *(Left arrow)* / `Esc` | Return focus from diff viewer to file list |
+| **Stage / Unstage Hunk** | `Enter` *(in diff)* | Add or remove the selected hunk to/from staging |
+| **Stage / Unstage Line** | `s` *(in diff)* | Stage or unstage the selected line |
+| **Reset Line / Hunk** | `d` / `D` *(in diff)* | Reset selected line (`d`) or hunk (`Shift + d`) |
+| **Next / Prev Hunk** | `n` / `p` *(in diff)* | Jump to next or previous change hunk |
+| **Commit** | `c` | Open commit message editor (when changes staged) |
+| **Undo Commit** | `U` *(Shift + u)* | Undo the most recent commit |
+| **Push** | `p` | Push committed changes to remote |
+| **Pull** | `f` | Pull changes from remote |
+| **Fetch** | `F` *(Shift + f)* | Fetch remote references |
+| **Branch Menu** | `b` | Switch, create, or checkout branches |
+| **Tag Menu** | `t` | Create, annotate, or delete tags |
+| **Submodules** | `S` *(Shift + s)* | Open submodules menu |
+| **Blame** | `B` *(Shift + b)* | View git blame for selected file |
+| **File History** | `H` *(Shift + h)* | Inspect log history for selected file |
+| **Edit File** | `e` | Open highlighted file in `$EDITOR` |
+| **Help Menu** | `h` | Interactive all-commands cheat sheet |
+| **Quit** | `q` *(or `Ctrl + c`)* | Exit GitUI back to shell |
 
-### Staging Line by Line
-1. In the **Status** view (`1`), use `j`/`k` to select a modified file.
-2. Press `Enter` to focus the diff viewer.
-3. Navigate to a specific line or hunk with `j` and `k`.
-4. Press `s` to stage that line or hunk (or `u` to unstage).
-5. Press `Esc` to return focus to the file list.
+### Staging Line by Line & Hunks
+1. In the **Status** view (`1`), use `↑`/`↓` to highlight a modified file.
+2. Press `→` (Right arrow) to move focus into the diff viewer.
+3. Jump between hunks with `n` and `p`, or move line-by-line with `↑` and `↓`.
+4. Press `Enter` to stage the selected hunk, or press `s` to stage individual lines.
+5. Press `←` (Left arrow) or `Esc` to return focus to the file list.
 
 ---
 
@@ -344,8 +359,8 @@ To open links in your browser:
 | **Toggle Line Comment** | `Cmd + /` | `Cmd + /` / `Ctrl + c` | Comments/uncomments line or selection |
 | **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
 | **Multi-Cursor Next** | `Cmd + D` | `x` → `s` → `Enter` | Select lines, regex match, edit with `c` |
-| **Git Status & Staging** | `Cmd + Shift + G` | `gui` (GitUI) | Staging and diff viewer in side pane |
-| **Terminal Split / Float** | `Ctrl + ` ` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split pane or floating scratch pane in Zellij |
+| **Git Status & Staging** | `Cmd + Shift + G` | `gg` (GitUI) | Staging and diff viewer in side pane |
+| **Terminal Split / Float** | ``Ctrl + ` `` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split pane or floating scratch pane in Zellij |
 | **Buffer Tabs** | Tab click | `Tab` / `Shift + Tab` | Cycles through open buffer tabs |
 | **Close Tab** | `Cmd + W` | `Alt + w` / `:bc` | Closes active buffer tab |
 | **Command Palette** | `Cmd + Shift + P` | `Cmd + Shift + P` / `Space + ?` | Searchable palette of all editor commands |
@@ -406,27 +421,32 @@ Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `C
 
 ---
 
-## 11. Fish Shell Abbreviations
+## 11. Workflow Shortcuts
 
-All workflow abbreviations expand interactively when pressing `Space` or `Enter`:
+### 2-Letter Tools
+Quiet, tool-agnostic commands that execute directly without rewriting the prompt:
+
+| Command | Action | Details |
+| :--- | :--- | :--- |
+| `ws` | Workspace Manager | Auto-resumes most recent session; or starts fresh 3-pane layout |
+| `ws <name>` | Named Workspace | Attaches to or creates named workspace session |
+| `ws ls` | List Workspaces | Lists active sessions |
+| `ws k <name>` | Kill Workspace | Terminates a workspace session |
+| `ws da` | Delete Dead | Cleans up disconnected sessions |
+| `ed <path>` | Editor | Launches `$EDITOR` (Helix) |
+| `gg` | Git Interface | Opens GitUI |
+| `md <file>` | Markdown View | Renders Markdown in terminal with `mdcat` |
+| `jq` | JSON Processor | Runs `jaq` |
+
+### Interactive Package Manager Abbreviations
+Expand in-place upon pressing `Space` or `Enter` so custom flags and arguments can be viewed and edited:
 
 | Abbreviation | Expands To | Purpose |
 | :--- | :--- | :--- |
-| `zj` | `zellij` | Launch Zellij terminal multiplexer |
-| `zja <name>` | `zellij attach -c <name>` | Attach to or create named session |
-| `zide` | `zellij --layout ide` | Launch Zellij with 3-pane IDE layout |
-| `zjl` | `zellij list-sessions` | List active sessions |
-| `zjk <name>` | `zellij kill-session <name>` | Terminate a session |
-| `zjd` | `zellij delete-all-sessions` | Clean up disconnected session cache |
-| `helix` / `h` | `hx` | Launch Helix modal editor |
-| `gui` | `gitui` | Open GitUI interface |
-| `j` | `just` | Run project tasks from `justfile` |
 | `pn` | `pnpm` | Package manager |
 | `pnd` | `pnpm dev` | Start development server |
 | `pns` | `pnpm storybook` | Start Storybook |
 | `pnt` | `pnpm test:dev` | Run test suite in watch mode |
-| `jq` | `jaq` | Fast Rust JSON query processor |
-| `md` | `mdcat` | Render Markdown with inline images & Mermaid |
 
 ---
 
