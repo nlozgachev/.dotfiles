@@ -20,6 +20,7 @@ A terminal-first development setup built to replace heavy IDEs with fast, keyboa
 
 ```
 configs/      stow packages — each mirrors ~/
+├── bin/
 ├── dprint/
 ├── fish/
 ├── git/
@@ -85,6 +86,11 @@ Common shortcuts configured in Fish:
 | `ed <path>` | Editor | Launches `$EDITOR` (Helix) |
 | `gg` | Git UI | Launches GitUI in current folder |
 | `md <file>` | Markdown View | Renders Markdown with inline images (`mdcat`) |
+| `wt <branch>` | Worktree | Create or switch to git worktree in `.worktrees/<branch>` |
+| `wt ls` | Worktree List | List active git worktrees |
+| `wt rm <branch>` | Worktree Remove | Delete worktree folder and prune |
+| `fnc branch` | Conventional Branch | Interactive conventional branch creation |
+| `fnc commit` | Conventional Commit | Conventional commit with auto-detected branch task ID |
 
 Package manager abbreviations expand in-place:
 * `pn` → `pnpm`

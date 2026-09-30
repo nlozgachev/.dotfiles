@@ -1,0 +1,47 @@
+#!/usr/bin/env -S fish --no-config
+
+set -l cmd $argv[1]
+set -l root (git rev-parse --show-toplevel 2>/dev/null)
+test -z "$root"; and echo "Error: Not inside a git repository" >&2; and exit 1
+
+switch "$cmd"
+    case "" help
+        echo "Usage:"
+        echo "  wt <branch>      Create or get path to .worktrees/<branch>"
+        echo "  wt ls            List active worktrees"
+        echo "  wt rm <branch>   Remove worktree and prune"
+        exit 0
+
+    case ls list
+        exec git worktree list
+
+    case rm remove
+        set -l branch $argv[2]
+        test -z "$branch"; and echo "Usage: wt rm <branch>" >&2; and exit 1
+        set -l wt_path "$root/.worktrees/$branch"
+        if not test -d "$wt_path"
+            echo "Error: Worktree not found at $wt_path" >&2
+            exit 1
+        end
+        git worktree remove "$wt_path"
+        and git worktree prune
+        and echo "Removed worktree: $branch"
+        exit 0
+
+    case '*'
+        set -l branch $cmd
+        set -l wt_path "$root/.worktrees/$branch"
+        if test -d "$wt_path"
+            echo "$wt_path"
+        else
+            mkdir -p "$root/.worktrees"
+            if git show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null
+                git worktree add "$wt_path" "$branch" >&2
+            else if git show-ref --verify --quiet "refs/remotes/origin/$branch" 2>/dev/null
+                git worktree add --track -b "$branch" "$wt_path" "origin/$branch" >&2
+            else
+                git worktree add -b "$branch" "$wt_path" >&2
+            end
+            and echo "$wt_path"
+        end
+end

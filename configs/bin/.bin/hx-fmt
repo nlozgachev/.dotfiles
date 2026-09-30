@@ -1,0 +1,18 @@
+#!/usr/bin/env -S fish --no-config
+
+set -l file $argv[1]
+test -z "$file"; and exit 1
+
+set -l dir (path resolve (path dirname $file))
+set -l ancestors $dir
+while test "$dir" != "/"
+    set dir (path dirname $dir)
+    set -a ancestors $dir
+end
+
+for cfg in $ancestors/.oxfmtrc* $ancestors/oxfmt.config*
+    type -q oxfmt; and exec oxfmt --stdin-filepath=$file
+end
+
+# fallback
+exec dprint fmt --stdin $file

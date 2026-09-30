@@ -1,0 +1,129 @@
+#!/usr/bin/env -S fish --no-config
+
+# ── User Settings ────────────────────────────────────────────────────────────
+# Default prefix for task IDs (e.g. "ABC" -> typing "1234" becomes "ABC-1234").
+# Leave empty "" if you do not want an automatic prefix.
+set -l DEFAULT_TASK_PREFIX ""
+
+# Set to true to pass --no-verify on git commit by default
+set -l NO_VERIFY false
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+function __ensure_git
+    set -l git_root (git rev-parse --show-toplevel 2>/dev/null)
+    if test -z "$git_root"
+        echo "Error: Not a git repository (or any of the parent directories)" >&2
+        exit 1
+    end
+end
+
+# ── Command Router ───────────────────────────────────────────────────────────
+set -l cmd $argv[1]
+
+switch "$cmd"
+    case branch
+        __ensure_git
+
+        # Base Branch Detection (Priority: develop -> main -> master)
+        set -l base_branch ""
+        for candidate in develop main master
+            if git show-ref --verify --quiet "refs/heads/$candidate" 2>/dev/null; \
+               or git show-ref --verify --quiet "refs/remotes/origin/$candidate" 2>/dev/null
+                set base_branch $candidate
+                break
+            end
+        end
+        test -z "$base_branch"; and set base_branch (git branch --show-current 2>/dev/null; or echo "HEAD")
+        set -l branch_types feature bugfix hotfix release chore
+        set -l type ""
+        if test -t 0; and type -q fzf
+            set type (printf "%s\n" $branch_types | fzf --height=8 --reverse --prompt="Branch type > ")
+        else
+            echo "Select task type:" >&2
+            for i in (seq (count $branch_types))
+                echo "  $i. $branch_types[$i]" >&2
+            end
+            read -l -P "Choice [1-5]: " type_idx
+            set type $branch_types[$type_idx]
+        end
+        test -z "$type"; and echo "Invalid choice" >&2; and exit 1
+
+        read -l -P "Task ID (optional, e.g. 1234): " task_id
+        read -l -P "Description (required): " raw_desc
+        test -z "$raw_desc"; and echo "Description is required" >&2; and exit 1
+
+        # Format full task ID
+        set -l full_id ""
+        if test -n "$task_id"
+            if string match -qr '^[A-Za-z]+-' "$task_id"
+                set full_id "$task_id"
+            else if test -n "$DEFAULT_TASK_PREFIX"
+                set full_id "$DEFAULT_TASK_PREFIX-$task_id"
+            else
+                set full_id "$task_id"
+            end
+        end
+
+        # Slugify description to snake_case
+        set -l slug (string replace -ra '[^a-zA-Z0-9]+' '_' (string lower $raw_desc) | string trim -c '_')
+
+        set -l branch_name "$type/"
+        test -n "$full_id"; and set branch_name "$branch_name$full_id""_"
+        set branch_name "$branch_name$slug"
+
+        git checkout -b "$branch_name" "$base_branch"
+        and echo "Created and checked out '$branch_name' (from $base_branch)"
+
+    case commit
+        __ensure_git
+        set -l commit_types \
+            "feat: A new feature" \
+            "fix: A bug fix" \
+            "chore: Build process, dependencies, or auxiliary tool changes" \
+            "docs: Documentation only changes" \
+            "style: Code style or formatting changes" \
+            "refactor: Code refactoring without behavior change" \
+            "perf: Performance improvements" \
+            "test: Adding or correcting tests" \
+            "ci: CI/CD configuration changes" \
+            "build: Build system changes"
+
+        set -l selected_type ""
+        if test -t 0; and type -q fzf
+            set selected_type (printf "%s\n" $commit_types | fzf --height=12 --reverse --prompt="Commit type > " | string split ":" -f1)
+        else
+            echo "Select change type:" >&2
+            for i in (seq (count $commit_types))
+                echo "  $i. $commit_types[$i]" >&2
+            end
+            read -l -P "Choice [1-10]: " type_idx
+            set selected_type (string split ":" -f1 $commit_types[$type_idx])
+        end
+        test -z "$selected_type"; and echo "No change type selected" >&2; and exit 1
+
+        read -l -P "Commit message (required): " msg
+        test -z "$msg"; and echo "Commit message is required" >&2; and exit 1
+
+        read -l -P "Commit body (optional): " body
+
+        # Extract task ID from current branch name (e.g. feature/ABC-1234_desc -> ABC-1234)
+        set -l current_branch (git branch --show-current 2>/dev/null)
+        set -l branch_task_id (string match -r '[A-Za-z]+-[0-9]+' "$current_branch")
+
+        # Format commit title
+        set -l commit_title "$selected_type: $msg"
+        test -n "$branch_task_id"; and set commit_title "$commit_title ($branch_task_id)"
+
+        # Prepare git commit command
+        set -l git_args commit -m "$commit_title"
+        test -n "$body"; and set -a git_args -m "$body"
+        test "$NO_VERIFY" = "true"; and set -a git_args "--no-verify"
+
+        git $git_args
+
+    case '*'
+        echo "Usage:"
+        echo "  fnc branch    Create a conventional branch (from develop/main/master)"
+        echo "  fnc commit    Create a conventional commit with auto branch task ID"
+        exit 0
+end

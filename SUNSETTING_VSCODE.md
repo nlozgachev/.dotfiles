@@ -300,87 +300,149 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 3. The entire implementation block inside the braces is selected.
 4. Press **`c`** to delete the block and enter Insert mode to replace it.
 
-### Workflow 3: Multi-Cursor Regex Search and Edit
-1. Select the target section of code with `x` (or select the entire file with `%`).
-2. Press **`s`** to open regex search.
-3. Type the identifier or pattern to modify (e.g. `prevItem`) and press `Enter`.
-4. Each match becomes an active cursor.
-5. Press **`c`** to change all occurrences simultaneously.
-6. Press **`,`** (comma) when done to collapse back to a single primary cursor.
+### Workflow 3: Multiple Cursors & Column Editing (Mac Option = Alt)
+* **Column cursors below / above**:
+  * Press **`C`** *(Shift + c)* to duplicate the cursor to the line below.
+  * Press **`Option + C`** *(⌥ + Shift + c)* to duplicate the cursor to the line above.
+* **Split lines into individual cursors**:
+  * Select a block of lines with **`x`** (or `5x`).
+  * Press **`Option + s`** *(⌥ + s)* to split the selection into one cursor per line.
+  * Press **`I`** to insert at the beginning of each line, or **`A`** at the end.
+* **Find and replace all occurrences in a file**:
+  1. Cursor on word → press **`*`** (registers target word).
+  2. Select whole file with **`%`** (or select lines with `x`).
+  3. Press **`s`** then **`Enter`** (creates an active cursor on every match).
+  4. Press **`c`** to change all instances simultaneously.
+* **Exit multi-cursor mode**:
+  * Press **,** *(comma)* to drop all extra cursors and keep only the primary cursor.
 
 ### Workflow 4: Jump to Definition and Return
 1. Place cursor on a function call or imported module.
-2. Press **`F12`** (or `gd`) to jump directly to its definition.
+2. Press **`gd`** to jump directly to its definition.
 3. Inspect or edit the source.
 4. Press **`Ctrl + o`** to jump back to your previous location in the original file.
 
-### Workflow 5: Splitting Multi-Line Selections
-1. Select several lines of code with `x` repeated.
-2. Press **`Alt + s`** to split the selection into one cursor per line.
-3. Press `I` or `A` to insert text at the beginning or end of every selected line simultaneously.
+### Workflow 5: Project-Wide Find & Replace Across Multiple Files
+When replacing a string across dozens of files in the project:
+1. In the terminal (or bottom Zellij pane), use **`rg`** to inspect matches:
+   ```sh
+   rg "oldText"
+   ```
+2. Run **`sd`** (fast regex replacer) across all matching files:
+   ```sh
+   sd 'oldText' 'newText' (rg -l 'oldText')
+   ```
+3. If files are already open in Helix, run **`:rla`** (`:reload-all`) to sync changes from disk.
+
+### Workflow 6: Resolving Git Merge Conflicts
+1. In Tab 2 (`Git`) with GitUI, conflicting files are highlighted with conflict markers.
+2. Switch to Tab 1 (`Code`) in Helix and open the conflicting file.
+3. Search for conflict markers:
+   ```
+   /<<<<<<<  then  Enter
+   ```
+4. Jump between markers with **`n`** (next) and **`N`** (prev). Resolve the conflict by deleting unwanted lines with **`x`** → **`d`**.
+5. Save the resolved file with **`Cmd + S`** (`:w`).
+6. Switch back to Tab 2 (`Git`), highlight the resolved file, and press **`Enter`** (or `s`) to mark as resolved/staged.
+
+### Workflow 7: Line-by-Line & Hunk-Level Git Staging in GitUI
+1. In Tab 2 (`Git`), navigate files with `↑` / `↓`.
+2. Press **`→`** (right arrow) to focus the diff viewer.
+3. **Stage a specific hunk**: Press **`n`** / **`p`** to cycle hunks; press **`Enter`** or **`s`** to stage only the highlighted hunk.
+4. **Stage specific lines**: Press **`v`** or **`l`** to switch to line-staging mode, select lines, and press **`s`** to stage just those lines.
+5. Press **`←`** (left arrow) or **`Esc`** to return to the file list.
+
+### Workflow 8: Git Stashing & Branch Switching in GitUI
+* **Stashes**:
+  1. In GitUI, press **`z`** to open the Stash manager.
+  2. Press **`s`** to create a new stash (type message, hit `Enter`).
+  3. To pop/apply: select stash from list and press **`a`** (apply) or **`d`** (drop).
+* **Branches**:
+  1. Press **`b`** to open the Branch manager.
+  2. Select any local or remote branch and press **`Enter`** to checkout.
+  3. Press **`c`** to branch from current HEAD.
+
+### Workflow 9: Side-by-Side Splits (Helix vs. Zellij)
+* **Inside Helix (`Ctrl + w` splits)**:
+  * Best for comparing two files or viewing types while coding in the same project.
+  * **`Ctrl + w` → `v`**: Open vertical split.
+  * **`Ctrl + w` → `s`**: Open horizontal split.
+  * **`Ctrl + w` → `h`/`j`/`k`/`l`**: Switch focus between splits.
+  * **`Ctrl + w` → `q`**: Close active split (buffer stays loaded).
+* **In Zellij (`Ctrl + a` panes)**:
+  * Best for separate terminal tasks, test watchers, or viewing a second repository.
+  * **`Ctrl + a` → `p` → `|`**: Vertical split pane.
+  * **`Ctrl + a` → `p` → `z`**: Zoom/maximize active pane (press again to unzoom).
+
+### Workflow 10: Smart Automatic Code Formatting (`hx-fmt`)
+Formatting on save is automated via the lightweight `hx-fmt` wrapper:
+* If a repository has an `oxfmt` config (`.oxfmtrc*`, `oxfmt.config*`), it automatically formats via **`oxfmt`** using that repo's rules.
+* Otherwise, it defaults to **`dprint`** via your global `~/.config/dprint/dprint.jsonc`.
+* Zero manual toggling required.
+
+### Workflow 11: Opening URLs, GitHub PRs, and File Paths
+* **From Helix (`gf`)**: Place the cursor on any URL (`https://...`) or relative file path and press **`gf`** (*Go to File*). URLs open immediately in your browser; file paths open directly in a new buffer.
+* **From Kitty**: Hold **`Cmd`** (or **`Shift`**) while clicking any link or PR URL in terminal output to open in your browser.
+
+### Workflow 12: Debugging in the Browser
+This environment is optimized for web/frontend development:
+1. Run your dev server in the bottom 15% terminal pane (`pnd`).
+2. Open the app in your browser and use **Chrome / Safari DevTools** for breakpoints, DOM inspection, and console debugging.
+3. Edit code in Helix on top; changes reload instantly via Vite/Next/Astro HMR.
 
 ---
 
-## 7. Opening Links and URLs in Code
-
-To open links in your browser:
-
-* **From Helix (`gf`)**: Place cursor on any URL and press `gf` (go to file). Helix opens it in your default browser.
-* **From Kitty (`Cmd + Click` or `Shift + Click`)**: Hold `Cmd` or `Shift` while clicking any link.
-
----
-
-## 8. VSCode to Terminal Action Map
+## 7. VSCode to Terminal Action Map
 
 | VSCode Feature / Action | VSCode Shortcut | Terminal Equivalent | Details |
 | :--- | :--- | :--- | :--- |
-| **File Picker** | `Cmd + P` | `Cmd + P` / `Space + f` | Fuzzy search by filename |
-| **Global Text Search** | `Cmd + Shift + F` | `Cmd + Shift + F` / `Space + /` | Search across files |
-| **Save & Format** | `Cmd + S` | `Cmd + S` / `:w` | Writes buffer and auto-formats (`oxfmt`) |
+| **File Picker** | `Cmd + P` | `Space + f` | Fuzzy search by filename |
+| **Global Text Search** | `Cmd + Shift + F` | `Space + /` | Search across files |
+| **Save & Format** | `Cmd + S` | `Cmd + S` / `:w` | Writes buffer and auto-formats (`hx-fmt`) |
 | **Hover Types & Docs** | Hover / `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signatures and documentation |
+| **Toggle Inlay Hints** | Settings toggle | `Space + i` | Toggles inline type/parameter annotations |
 | **Code Actions & Fixes** | `Cmd + .` | `Space + a` | Quick fixes, imports, linter actions |
-| **Go to Definition** | `F12` | `F12` / `gd` | Jump to definition (`Ctrl + o` returns) |
-| **Find All References** | `Shift + F12` | `Shift + F12` / `gr` | Opens reference list in fuzzy picker |
-| **Project-Wide Rename** | `F2` | `F2` / `Space + r` | Updates all references; commit with `:wa` |
+| **Go to Definition** | `F12` / `Cmd + Click` | `gd` | Jump to definition (`Ctrl + o` returns) |
+| **Find All References** | `Shift + F12` | `gr` | Opens reference list in fuzzy picker |
+| **Project-Wide Rename** | `F2` | `Space + r` | Updates all references; commit with `:wa` |
 | **Next / Prev Diagnostic** | `F8` / `Shift + F8` | `]d` / `[d` | Jump directly to next/previous error |
-| **Toggle Line Comment** | `Cmd + /` | `Cmd + /` / `Ctrl + c` | Comments/uncomments line or selection |
+| **Toggle Line Comment** | `Cmd + /` | `Ctrl + c` | Comments/uncomments line or selection |
 | **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
-| **Multi-Cursor Next** | `Cmd + D` | `x` → `s` → `Enter` | Select lines, regex match, edit with `c` |
-| **Git Status & Staging** | `Cmd + Shift + G` | `gg` (GitUI) | Staging and diff viewer in side pane |
-| **Terminal Split / Float** | ``Ctrl + ` `` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split pane or floating scratch pane in Zellij |
-| **Buffer Tabs** | Tab click | `Tab` / `Shift + Tab` | Cycles through open buffer tabs |
-| **Close Tab** | `Cmd + W` | `Alt + w` / `:bc` | Closes active buffer tab |
-| **Command Palette** | `Cmd + Shift + P` | `Cmd + Shift + P` / `Space + ?` | Searchable palette of all editor commands |
+| **Multi-Cursor Add Below** | `Cmd + Option + ↓` | `C` | Adds cursor to line below |
+| **Multi-Cursor Add Above** | `Cmd + Option + ↑` | `Option + C` *(⌥ + Shift + c)* | Adds cursor to line above |
+| **Multi-Cursor Split Lines**| `Option + Shift + I` | `Option + s` *(⌥ + s)* | Splits selected lines into cursors |
+| **Multi-Cursor Match Next**| `Cmd + D` | `*` → `s` → `Enter` | Select matches across buffer |
+| **Clear Multi-Cursors** | `Esc` | `,` *(comma)* | Collapses back to single primary cursor |
+| **Git Status & Staging** | `Cmd + Shift + G` | `gg` (or Zellij Tab 2) | Interactive staging and diffs |
+| **Terminal Split / Float** | ``Ctrl + ` `` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split or floating pane in Zellij |
+| **Buffer Tabs** | Tab click | `gn` / `gp` (or `Space + b`) | Switch or search open buffer tabs |
+| **Close Tab** | `Cmd + W` | `:bc` | Closes active buffer tab |
+| **Reload from Disk** | Auto / Manual reload | `:rl` / `:rla` | Reload active / all buffers from disk |
 
 ---
 
-## 9. macOS Shortcuts & Ergonomics
+## 8. macOS Shortcuts & Ergonomics
 
-### 1. Kitty Native `Cmd` Bridges
-Configured in [`configs/kitty/.config/kitty/kitty.conf`](file:///Users/nikita/Projects/.dotfiles/configs/kitty/.config/kitty/kitty.conf) to map standard macOS `Cmd` combinations directly to Helix commands:
-* **`Cmd + S`**: Save buffer (`:w`)
-* **`Cmd + P`**: File picker (`Space + f`)
-* **`Cmd + /`**: Toggle line comment (`Ctrl + c`)
-* **`Cmd + Shift + P`**: Command palette (`Alt + x`)
-* **`Cmd + Shift + F`**: Global search (`Space + /`)
+### 1. Kitty Native `Cmd + S` Save Bridge
+Kitty maps standard macOS `Cmd + S` to terminal `Ctrl + s` (\x13), which Helix listens to in both Normal and Insert mode to save and format immediately.
 
 ### 2. Option Key as Alt (`macos_option_as_alt yes`)
-By default on macOS, the `⌥ Option` key types special characters (such as `å` or `ç`) instead of standard `Alt` escape sequences. Kitty is configured with:
-```ini
-macos_option_as_alt yes
-```
-This allows using `Option` as `Alt` in Helix (such as `Alt + s` to split selections, `Alt + w` to close a buffer, and `Alt + x` for the command palette).
+By default on macOS, the `⌥ Option` key types special characters (such as `å` or `ç`). Kitty is configured with `macos_option_as_alt yes`, mapping `Option` directly as `Alt`.
+* `Option + s` *(⌥ + s)*: Split lines into multiple cursors.
+* `Option + C` *(⌥ + Shift + c)*: Add cursor on line above.
+* `Option + ,` *(⌥ + ,)*: Drop active cursor from multi-cursor group.
+* *Terminal fallback*: Pressing and releasing **`Esc`** then pressing any key sends the exact same signal as `Option + key`.
 
-### 3. Helix Space Shortcuts
-Most common Helix shortcuts start with `Space`:
+### 3. Helix Space Menu
+The vast majority of Helix operations begin cleanly with `Space`:
 * `Space + f`: File picker
-* `Space + /`: Global search
-* `Space + ?`: Command palette
-* `Space + b`: Switch buffers
-* `Space + c`: Toggle line comment
-* `Space + C`: Toggle block comment
-* `Space + a`: Code actions
-* `Space + k`: Type inspection
+* `Space + /`: Global project search
+* `Space + b`: Open buffers picker
+* `Space + i`: Toggle inlay type hints
+* `Space + r`: Rename symbol project-wide
+* `Space + a`: Code actions & imports
+* `Space + k`: Hover type signature
+* `Space + c` / `Space + C`: Line / block comments
 
 ### 4. Recommended: Remap Caps Lock to Control
 Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `Ctrl + d` scroll) are easier to reach when mapped to Caps Lock:

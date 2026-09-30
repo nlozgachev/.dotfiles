@@ -2,7 +2,7 @@ layout {
     default_tab_template {
         children
         pane size=1 borderless=true {
-            plugin location="file:/Users/nikita/.config/zellij/plugins/zjstatus.wasm" {
+            plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
                 format_left   "{mode}#[fg=#bbdaff,bold]{session} #[fg=#7285b7]• {tabs}"
                 format_right  "{command_host_date}"
                 format_space  ""

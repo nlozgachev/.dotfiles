@@ -78,7 +78,7 @@ args = ["--stdio"]
 name = "typescript"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+formatter = { command = "hx-fmt", args = ["%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # TSX
@@ -86,7 +86,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "tsx"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+formatter = { command = "hx-fmt", args = ["%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JavaScript
@@ -94,7 +94,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "javascript"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+formatter = { command = "hx-fmt", args = ["%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JSX
@@ -102,7 +102,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "jsx"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+formatter = { command = "hx-fmt", args = ["%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # HTML
@@ -134,7 +134,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "json"
 language-servers = ["vscode-json-language-server"]
 auto-format = true
-formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+formatter = { command = "hx-fmt", args = ["%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # Go

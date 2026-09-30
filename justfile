@@ -6,11 +6,11 @@ default:
 
 # Symlink configs to ~ using stow
 link:
-    cd configs && stow -vt ~ dprint fish git gitui helix kitty mise zellij
+    cd configs && stow -vt ~ bin dprint fish git gitui helix kitty mise zellij
 
 # Remove config symlinks
 unlink:
-    cd configs && stow -Dt ~ dprint fish git gitui helix kitty mise zellij
+    cd configs && stow -Dt ~ bin dprint fish git gitui helix kitty mise zellij
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 
@@ -59,7 +59,7 @@ node:
 
 # Install frontend tools and LSPs
 frontend:
-    npm add -g oxlint dprint typescript@5 @vtsls/language-server vscode-langservers-extracted yaml-language-server @astrojs/language-server
+    npm add -g oxlint oxfmt dprint typescript@5 @vtsls/language-server vscode-langservers-extracted yaml-language-server @astrojs/language-server
 
 # Install Deno (mise)
 deno:
@@ -100,7 +100,7 @@ update-node:
 
 # Update frontend dev tools
 update-frontend:
-    npm update -g oxlint dprint typescript @vtsls/language-server vscode-langservers-extracted yaml-language-server @astrojs/language-server
+    npm update -g oxlint oxfmt dprint typescript @vtsls/language-server vscode-langservers-extracted yaml-language-server @astrojs/language-server
 
 # Update Deno to latest
 update-deno:
