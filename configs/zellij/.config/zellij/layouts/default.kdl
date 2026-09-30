@@ -1,42 +1,48 @@
 layout {
-    pane split_direction="vertical" {
-        pane size="70%" name="─"
-        pane split_direction="horizontal" {
-            pane size="50%" name="Git"
-            pane size="50%" name="Terminal"
+    default_tab_template {
+        children
+        pane size=1 borderless=true {
+            plugin location="file:/Users/nikita/.config/zellij/plugins/zjstatus.wasm" {
+                format_left   "{mode}#[fg=#bbdaff,bold]{session} #[fg=#7285b7]• {tabs}"
+                format_right  "{command_host_date}"
+                format_space  ""
+
+                mode_normal        ""
+                mode_tmux          "#[fg=#002451,bg=#ffeead,bold] LEADER #[fg=#ffffff,bg=default,bold] p#[fg=#bbdaff]:pane  #[fg=#ffffff]t#[fg=#bbdaff]:tab  #[fg=#ffffff]r#[fg=#bbdaff]:resize  #[fg=#ffffff]m#[fg=#bbdaff]:move  #[fg=#ffffff]s#[fg=#bbdaff]:scroll  #[fg=#ffffff]d#[fg=#bbdaff]:detach  #[fg=#ffffff]q#[fg=#bbdaff]:quit  #[fg=#ffeead]Esc:cancel  "
+                mode_pane          "#[fg=#002451,bg=#d1f1a9,bold] PANE #[fg=#ffffff,bg=default,bold] |#[fg=#bbdaff]:v-split  #[fg=#ffffff]-#[fg=#bbdaff]:h-split  #[fg=#ffffff],#[fg=#bbdaff]:rename  #[fg=#ffffff]b#[fg=#bbdaff]:break  #[fg=#ffffff]z#[fg=#bbdaff]:zoom  #[fg=#ffffff]x#[fg=#bbdaff]:close  #[fg=#ffffff]w#[fg=#bbdaff]:float  #[fg=#ffffff]hjkl#[fg=#bbdaff]:focus  #[fg=#ffeead]Esc:done  "
+                mode_tab           "#[fg=#002451,bg=#d1f1a9,bold] TAB #[fg=#ffffff,bg=default,bold] c#[fg=#bbdaff]:new  #[fg=#ffffff],#[fg=#bbdaff]:rename  #[fg=#ffffff]hl#[fg=#bbdaff]:move  #[fg=#ffffff]1-9#[fg=#bbdaff]:jump  #[fg=#ffffff]Tab/p#[fg=#bbdaff]:cycle  #[fg=#ffffff]x#[fg=#bbdaff]:close  #[fg=#ffeead]Esc:done  "
+                mode_resize        "#[fg=#002451,bg=#d1f1a9,bold] RESIZE #[fg=#ffffff,bg=default,bold] hjkl#[fg=#bbdaff]:grow  #[fg=#ffffff]HJKL#[fg=#bbdaff]:shrink  #[fg=#ffffff]+/-#[fg=#bbdaff]:all  #[fg=#ffeead]Esc:done  "
+                mode_move          "#[fg=#002451,bg=#d1f1a9,bold] MOVE #[fg=#ffffff,bg=default,bold] hjkl#[fg=#bbdaff]:swap  #[fg=#ffffff]n/p#[fg=#bbdaff]:cycle  #[fg=#ffeead]Esc:done  "
+                mode_scroll        "#[fg=#002451,bg=#ebbbff,bold] SCROLL #[fg=#ffffff,bg=default,bold] jk#[fg=#bbdaff]:line  #[fg=#ffffff]ud#[fg=#bbdaff]:half  #[fg=#ffffff]/#[fg=#bbdaff]:search  #[fg=#ffffff]e#[fg=#bbdaff]:edit  #[fg=#ffeead]q/Esc:exit  "
+                mode_search        "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffffff,bg=default,bold] n/p#[fg=#bbdaff]:match  #[fg=#ffeead]Esc:exit  "
+                mode_enter_search  "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffeead,bg=default,bold] Enter:find  "
+                mode_entersearch   "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffeead,bg=default,bold] Enter:find  "
+                mode_rename_tab    "#[fg=#002451,bg=#ffeead,bold] RENAME-TAB #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
+                mode_renametab     "#[fg=#002451,bg=#ffeead,bold] RENAME-TAB #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
+                mode_rename_pane   "#[fg=#002451,bg=#ffeead,bold] RENAME-PANE #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
+                mode_renamepane    "#[fg=#002451,bg=#ffeead,bold] RENAME-PANE #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
+                mode_locked        "#[fg=#002451,bg=#ff9da4,bold] LOCKED #[fg=#ffeead,bg=default,bold] Ctrl+g:unlock  "
+                mode_default_to_mode "normal"
+
+                tab_normal              "#[fg=#7285b7] {index}:{name} "
+                tab_active              "#[fg=#ffffff,bg=#003f8e,bold] {index}:{name} "
+                tab_separator           " "
+
+                command_host_date_command    "bash -c \"date +'%F %R'\""
+                command_host_date_format     "#[fg=#ffeead,bold]{stdout} "
+                command_host_date_interval   "5"
+                command_host_date_rendermode "static"
+            }
         }
     }
-    pane size=1 borderless=true {
-        plugin location="file:/Users/nikita/.config/zellij/plugins/zjstatus.wasm" {
-            format_left   "{mode}#[fg=#7285b7]SESSION: #[fg=#bbdaff,bold]{session}  {tabs}"
-            format_right  "{command_host_date}"
-            format_space  ""
 
-            mode_normal        ""
-            mode_tmux          "#[fg=#002451,bg=#ffeead,bold] LEADER #[fg=#ffffff,bg=default,bold] p#[fg=#bbdaff]:pane  #[fg=#ffffff]t#[fg=#bbdaff]:tab  #[fg=#ffffff]r#[fg=#bbdaff]:resize  #[fg=#ffffff]m#[fg=#bbdaff]:move  #[fg=#ffffff]s#[fg=#bbdaff]:scroll  #[fg=#ffffff]d#[fg=#bbdaff]:detach  #[fg=#ffffff]q#[fg=#bbdaff]:quit  #[fg=#ffeead]Esc:cancel  "
-            mode_pane          "#[fg=#002451,bg=#d1f1a9,bold] PANE #[fg=#ffffff,bg=default,bold] |#[fg=#bbdaff]:v-split  #[fg=#ffffff]-#[fg=#bbdaff]:h-split  #[fg=#ffffff],#[fg=#bbdaff]:rename  #[fg=#ffffff]z#[fg=#bbdaff]:zoom  #[fg=#ffffff]x#[fg=#bbdaff]:close  #[fg=#ffffff]w#[fg=#bbdaff]:float  #[fg=#ffffff]hjkl#[fg=#bbdaff]:focus  #[fg=#ffeead]Esc:done  "
-            mode_tab           "#[fg=#002451,bg=#d1f1a9,bold] TAB #[fg=#ffffff,bg=default,bold] c#[fg=#bbdaff]:new  #[fg=#ffffff],#[fg=#bbdaff]:rename  #[fg=#ffffff]1-9#[fg=#bbdaff]:jump  #[fg=#ffffff]Tab/p#[fg=#bbdaff]:cycle  #[fg=#ffffff]x#[fg=#bbdaff]:close  #[fg=#ffeead]Esc:done  "
-            mode_resize        "#[fg=#002451,bg=#d1f1a9,bold] RESIZE #[fg=#ffffff,bg=default,bold] hjkl#[fg=#bbdaff]:grow  #[fg=#ffffff]HJKL#[fg=#bbdaff]:shrink  #[fg=#ffffff]+/-#[fg=#bbdaff]:all  #[fg=#ffeead]Esc:done  "
-            mode_move          "#[fg=#002451,bg=#d1f1a9,bold] MOVE #[fg=#ffffff,bg=default,bold] hjkl#[fg=#bbdaff]:swap  #[fg=#ffffff]n/p#[fg=#bbdaff]:cycle  #[fg=#ffeead]Esc:done  "
-            mode_scroll        "#[fg=#002451,bg=#ebbbff,bold] SCROLL #[fg=#ffffff,bg=default,bold] jk#[fg=#bbdaff]:line  #[fg=#ffffff]ud#[fg=#bbdaff]:half  #[fg=#ffffff]/#[fg=#bbdaff]:search  #[fg=#ffffff]e#[fg=#bbdaff]:edit  #[fg=#ffeead]q/Esc:exit  "
-            mode_search        "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffffff,bg=default,bold] n/p#[fg=#bbdaff]:match  #[fg=#ffeead]Esc:exit  "
-            mode_enter_search  "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffeead,bg=default,bold] Enter:find  "
-            mode_entersearch   "#[fg=#002451,bg=#ebbbff,bold] SEARCH #[fg=#ffeead,bg=default,bold] Enter:find  "
-            mode_rename_tab    "#[fg=#002451,bg=#ffeead,bold] RENAME-TAB #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
-            mode_renametab     "#[fg=#002451,bg=#ffeead,bold] RENAME-TAB #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
-            mode_rename_pane   "#[fg=#002451,bg=#ffeead,bold] RENAME-PANE #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
-            mode_renamepane    "#[fg=#002451,bg=#ffeead,bold] RENAME-PANE #[fg=#ffeead,bg=default,bold] Enter:done  #[fg=#ffeead]Esc:cancel  "
-            mode_locked        "#[fg=#002451,bg=#ff9da4,bold] LOCKED #[fg=#ffeead,bg=default,bold] Ctrl+g:unlock  "
-            mode_default_to_mode "normal"
+    tab name="Code" split_direction="horizontal" focus=true {
+        pane size="85%" name="Editor" command="hx" focus=true
+        pane size="15%" name="Terminal"
+    }
 
-            tab_normal              "#[fg=#7285b7] {index}:{name} "
-            tab_active              "#[fg=#ffffff,bg=#003f8e,bold] {index}:{name} "
-            tab_separator           " "
-
-            command_host_date_command    "bash -c \"date +'%F %R'\""
-            command_host_date_format     "#[fg=#ffeead,bold]{stdout} "
-            command_host_date_interval   "5"
-            command_host_date_rendermode "static"
-        }
+    tab name="Git" split_direction="vertical" {
+        pane size="50%" name="GitUI" command="gitui"
+        pane size="50%" name="Terminal"
     }
 }

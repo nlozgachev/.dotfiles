@@ -59,6 +59,9 @@ keybinds clear-defaults=true {
         bind "-" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "n" { NewPane; SwitchToMode "Normal"; }
         bind "," "c" { SwitchToMode "RenamePane"; PaneNameInput 0; }
+        bind "b" { BreakPane; SwitchToMode "Normal"; }
+        bind "[" { BreakPaneLeft; SwitchToMode "Normal"; }
+        bind "]" { BreakPaneRight; SwitchToMode "Normal"; }
         bind "z" "Ctrl z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
         bind "x" "Ctrl x" { CloseFocus; SwitchToMode "Normal"; }
         bind "w" "Ctrl w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
@@ -73,6 +76,8 @@ keybinds clear-defaults=true {
         bind "Esc" "Enter" { SwitchToMode "Normal"; }
         bind "c" "Ctrl c" { NewTab; SwitchToMode "Normal"; }
         bind "," { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "h" "Ctrl h" "Left"  { MoveTab "Left"; }
+        bind "l" "Ctrl l" "Right" { MoveTab "Right"; }
         bind "1" { GoToTab 1; SwitchToMode "Normal"; }
         bind "2" { GoToTab 2; SwitchToMode "Normal"; }
         bind "3" { GoToTab 3; SwitchToMode "Normal"; }

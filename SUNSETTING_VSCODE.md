@@ -13,36 +13,17 @@ ws my-app
 ```
 *(Or simply `ws` to auto-resume your most recent workspace).*
 
-### 2. Default 3-Pane Layout
-Starting a session opens the default 3-pane layout (main editor 70% left, `Git` 50% top-right, `Terminal` 50% bottom-right).
+### 2. Default 2-Tab Workspace Layout
+Starting a session with `ws` opens the default 2-tab layout with tools already running:
 
-You can also split or add panes manually at any time:
-1. Split vertical (left and right):
-   ```
-   Ctrl + a  then  p  then  |
-   ```
-2. Move focus to the right pane:
-   ```
-   Ctrl + a  then  p  then  l
-   ```
-3. Split the right pane horizontal (top and bottom):
-   ```
-   Ctrl + a  then  p  then  -
-   ```
+* **Tab 1 (`Code`)**:
+  * **Top pane (85%)**: Helix (`hx`) running in the current directory.
+  * **Bottom pane (15%)**: Terminal shell ready for dev servers (`pnd`), tests (`pnt`), or commands.
+* **Tab 2 (`Git`)**:
+  * **Left pane (50%)**: GitUI (`gitui`) running in the current directory.
+  * **Right pane (50%)**: Terminal shell for git CLI commands or secondary tasks.
 
-### 3. Launch Tools in Their Panes
-* **Left pane (70%)**: Focus with `Ctrl + a` → `p` → `h`, then launch the editor:
-  ```sh
-  ed .
-  ```
-* **Top-right pane (30%)**: Focus with `Ctrl + a` → `p` → `l`, then start your dev server or test runner:
-  ```sh
-  pnd     # pnpm dev abbreviation
-  ```
-* **Bottom-right pane (30%)**: Focus with `Ctrl + a` → `p` → `j`, then launch the Git interface:
-  ```sh
-  gg
-  ```
+Switch tabs with `Ctrl + a` → `t` → `Tab` (or `1` / `2`). Switch panes with `Ctrl + a` → `p` → `h`/`j`/`k`/`l`.
 
 ### 4. Essential Daily Shortcuts
 | Action | Shortcut | Details |
@@ -66,11 +47,12 @@ You can also split or add panes manually at any time:
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │           Zellij (Sessions, Tabs, Splits)                   │
-│  ├─ Tab 1: Default Workspace                                │
-│  │   ├─ Left Pane (70%): Helix Editor                       │
-│  │   ├─ Top-Right (30%): Dev Server / Watcher               │
-│  │   └─ Bottom-Right (30%): GitUI                           │
-│  ├─ Tab 2: Secondary Tasks                                  │
+│  ├─ Tab 1: Code (Active)                                    │
+│  │   ├─ Top Pane (85%): Helix Editor (running hx)           │
+│  │   └─ Bottom Pane (15%): Terminal shell                   │
+│  ├─ Tab 2: Git                                              │
+│  │   ├─ Left Pane (50%): GitUI (running gitui)              │
+│  │   └─ Right Pane (50%): Terminal shell                    │
 │  └─ Floating Pane: Scratch terminal (Ctrl+a -> p -> w)      │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -96,7 +78,7 @@ You can also split or add panes manually at any time:
 
 ## 3. Zellij: Workspaces, Tabs, and Panes
 
-Zellij uses the Tomorrow Night Blue palette with a 3-pane layout: the main editor pane takes 70% on the left, with `Git` (top) and `Terminal` (bottom) taking the remaining 30% on the right.
+Zellij uses the Tomorrow Night Blue palette with a default 2-tab layout: Tab 1 (`Code`) features the Helix editor on top (85%) and a terminal shell below (15%); Tab 2 (`Git`) provides a 50/50 vertical split with GitUI on the left and a terminal shell on the right.
 
 ### Pane Frames & Status Bar
 * **Active vs. Inactive Panes**: The focused pane has a warm gold border (`#ffeead`), while inactive panes use dark navy (`#183d6e`).
@@ -124,6 +106,7 @@ Tabs appear along the bottom status bar with clean numbering. All tab management
 | **New tab** | `Ctrl + a` → `t` → `c` | Open a new tab |
 | **Switch to tab N** | `Ctrl + a` → `t` → `1` .. `9` | Switch directly to tab index |
 | **Next / Prev tab** | `Ctrl + a` → `t` → `Tab` / `p` | Cycle through tabs |
+| **Move tab left / right** | `Ctrl + a` → `t` → `h` / `l` *(or arrows)* | Shift tab position left or right (`Enter`/`Esc` done) |
 | **Rename tab** | `Ctrl + a` → `t` → `,` | Rename the active tab (`Enter` to save, `Esc` to cancel) |
 | **Close tab** | `Ctrl + a` → `t` → `x` | Close the current tab |
 
@@ -140,6 +123,8 @@ Panes divide the window into active terminal regions. All pane management routes
 | **Toggle zoom** | `Ctrl + a` → `p` → `z` | Maximize current pane to 100% (press again to restore) |
 | **Toggle floating pane** | `Ctrl + a` → `p` → `w` | Toggle a floating scratch pane over layout |
 | **Rename pane** | `Ctrl + a` → `p` → `,` | Rename focused pane (`Enter` to save, `Esc` to cancel) |
+| **Break to new tab** | `Ctrl + a` → `p` → `b` | Move focused pane out into a new tab |
+| **Move pane to left / right tab** | `Ctrl + a` → `p` → `[` / `]` | Send focused pane into adjacent tab |
 | **Close focused pane** | `Ctrl + a` → `p` → `x` | Close active pane |
 
 ### Modes & Utilities
@@ -412,8 +397,8 @@ Shortcuts that use `Ctrl` (`Ctrl + a` prefix in Zellij, `Ctrl + o` jump back, `C
 * Helix has mouse support enabled for clicking and scrolling.
 * To select text with the native terminal or click links directly, hold **`Shift`** (or `Cmd + Shift`) while selecting or clicking.
 
-### 3. Use GitUI in the Split Pane
-* Keep GitUI running in the bottom-right pane. Switch to it with `Ctrl + a` → `p` → `j`, stage and commit, and return with `Ctrl + a` → `p` → `h`.
+### 3. Use GitUI in Tab 2
+* Tab 2 (`Git`) runs GitUI automatically. Switch to it with `Ctrl + a` → `t` → `Tab` (or `2`), stage and commit changes, and switch back to code with `Ctrl + a` → `t` → `1`. GitUI can also be run in any terminal pane using `gg`.
 
 ### 4. LSP Renaming Affects In-Memory Buffers
 * When running `F2` (rename symbol), Helix modifies the symbol across open buffers.
@@ -428,7 +413,7 @@ Quiet, tool-agnostic commands that execute directly without rewriting the prompt
 
 | Command | Action | Details |
 | :--- | :--- | :--- |
-| `ws` | Workspace Manager | Auto-resumes most recent session; or starts fresh 3-pane layout |
+| `ws` | Workspace Manager | Auto-resumes most recent session; or starts fresh 2-tab layout |
 | `ws <name>` | Named Workspace | Attaches to or creates named workspace session |
 | `ws ls` | List Workspaces | Lists active sessions |
 | `ws k <name>` | Kill Workspace | Terminates a workspace session |
