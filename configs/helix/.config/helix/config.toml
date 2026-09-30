@@ -50,7 +50,7 @@ tabpad = "·"
 # LSP integration
 [editor.lsp]
 display-messages = true
-display-inlay-hints = true
+display-inlay-hints = false
 auto-signature-help = true
 snippets = true
 goto-reference-include-declaration = false
@@ -73,31 +73,13 @@ separator = "│"
 # Gutters
 [editor.gutters]
 layout = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"]
-
 # ── Keybindings ───────────────────────────────────────────────────────────────
 
 [keys.normal]
-C-p = "file_picker"
-"Cmd-p" = "file_picker"
 C-s = ":write"
-"Cmd-s" = ":write"
-"tab" = ":buffer-next"
-"S-tab" = ":buffer-previous"
-C-c = "toggle_comments"
-A-x = "command_palette"
-A-w = ":buffer-close"
-F12 = "goto_definition"
-F2 = "rename_symbol"
-S-F12 = "goto_reference"
 
-[keys.normal.g]
-n = ":buffer-next"
-p = ":buffer-previous"
+[keys.normal.space]
+i = ":toggle lsp.display-inlay-hints"
 
 [keys.insert]
 C-s = ":write"
-"Cmd-s" = ":write"
-C-c = "toggle_comments"
-
-[keys.select]
-C-c = "toggle_comments"

@@ -1,0 +1,18 @@
+{
+  "json": {},
+  "markdown": {},
+  "toml": {},
+  "dockerfile": {},
+  "oxc": {},
+  "excludes": ["**/*-lock.json", "**/node_modules"],
+  "plugins": [
+    "npm:@dprint/json@0.25.0",
+    "npm:@dprint/markdown@0.24.0",
+    "npm:@dprint/toml@0.8.0",
+    "npm:@dprint/dockerfile@0.6.0",
+    "npm:@dprint/oxc@0.42.0",
+    "npm:dprint-plugin-malva@0.16.0",
+    "npm:dprint-plugin-markup@0.27.5",
+    "npm:dprint-plugin-yaml@0.6.0",
+  ],
+}

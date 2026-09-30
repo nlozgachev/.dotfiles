@@ -28,9 +28,9 @@ Switch tabs with `Ctrl + a` → `t` → `Tab` (or `1` / `2`). Switch panes with 
 ### 4. Essential Daily Shortcuts
 | Action | Shortcut | Details |
 | :--- | :--- | :--- |
-| **Open File** | `Cmd + P` *(or `Space + f`)* | Fuzzy file finder; type 2–3 letters |
-| **Global Search** | `Cmd + Shift + F` *(or `Space + /`)* | Search across repository |
-| **Save & Format** | `Cmd + S` *(or `:w`)* | Saves file and formats with `oxfmt` |
+| **Open File** | `Space + f` | Fuzzy file finder; type 2–3 letters |
+| **Global Search** | `Space + /` | Search across repository |
+| **Save & Format** | `Cmd + S` *(or `Ctrl + s` / `:w`)* | Saves file and formats with `dprint` |
 | **Switch Panes** | `Ctrl + a` → `p` → `h`/`j`/`k`/`l` | Move focus between editor, server, and git |
 | **Zoom Pane** | `Ctrl + a` → `p` → `z` | Maximize focused pane; press again to restore |
 | **Stage Changes** | In GitUI: `Enter` on file | Stages highlighted file (`→` into diff to stage hunks/lines) |
@@ -61,7 +61,7 @@ Switch tabs with `Ctrl + a` → `t` → `Tab` (or `1` / `2`). Switch panes with 
 | :--- | :--- | :--- |
 | **Terminal Emulator** | **Kitty** | Hardware-accelerated window, font ligatures, macOS shortcut bridging |
 | **Workspace Multiplexer** | **Zellij** | Background sessions, tab management, tiled and floating split panes |
-| **Modal Editor** | **Helix** | Text editing, syntax highlighting, LSP client (`vtsls`), formatting (`oxfmt`) |
+| **Modal Editor** | **Helix** | Text editing, syntax highlighting, LSP client (`vtsls`), formatting (`dprint`) |
 | **Git Interface** | **GitUI** | Terminal-based staging, line-by-line diffs, commit history, branches |
 | **Interactive Shell** | **Fish** | Shell environment, autosuggestions, workflow shortcuts (`ws`, `ed`, `gg`, `pnd`) |
 
@@ -258,25 +258,27 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 
 | Shortcut | Action | Description |
 | :--- | :--- | :--- |
-| `F12` *(or `gd`)* | Go to Definition | Jump to symbol definition (`Ctrl + o` jumps back) |
-| `Shift + F12` *(or `gr`)* | Find References | List all references in interactive fuzzy picker |
+| `gd` | Go to Definition | Jump to symbol definition (`Ctrl + o` jumps back) |
+| `gr` | Find References | List all references in interactive fuzzy picker |
 | `Space + k` *(or `K`)* | Hover Info | Show type signatures and documentation |
+| `Space + i` | Toggle Inlay Hints | Toggle inline type/parameter annotations on demand |
 | `Space + a` | Code Actions | Quick fixes, imports, and linter suggestions |
 | `Space + d` | File Diagnostics | List errors and warnings in current file |
 | `Space + D` | Workspace Diagnostics | List errors and warnings across the project |
 | `]d` / `[d` | Next / Prev Error | Jump directly to next or previous diagnostic |
-| `F2` *(or `Space + r`)* | Rename Symbol | Project-wide rename (commit with `:wa`) |
-| `Cmd + S` *(or `:format`)* | Format File | Format file using configured formatter (`oxfmt`) |
+| `Space + r` | Rename Symbol | Project-wide rename (commit with `:wa`) |
+| `Cmd + S` / `Ctrl + s` *(or `:w`)* | Save & Format | Save and format file with configured formatter (`dprint`) |
 
 ### Buffer & File Management
 
 | Shortcut | Action | Description |
 | :--- | :--- | :--- |
-| `Tab` / `Shift + Tab` | Next / Prev Buffer | Cycle through open buffers across top tab bar |
-| `gn` / `gp` | Next / Prev Buffer | Vim-compatible buffer navigation |
+| `gn` / `gp` | Next / Prev Buffer | Cycle to next or previous open buffer |
 | `Space + b` | Buffer Picker | Interactive fuzzy search of open buffers |
-| `Alt + w` *(or `:bc`)* | Close Buffer | Close current buffer tab (`:bc!` force closes) |
+| `:bc` *(or `:bc!`)* | Close Buffer | Close current buffer tab (`!` forces close without save) |
 | `:open <path>` | Open / Create File | Opens file; creates directories automatically on save |
+| `:reload` *(or `:rl`)* | Reload File | Reload current file from disk (syncs external changes) |
+| `:reload-all` *(or `:rla`)* | Reload All Files | Reload all open buffers from disk |
 | `:wa` | Write All | Saves all open, modified buffers to disk |
 
 ---
@@ -285,7 +287,7 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 
 ### Workflow 1: Renaming a Symbol Across the Entire Project
 1. Place the cursor on the function, variable, or class name in Helix.
-2. Press **`F2`** (or `Space + r`).
+2. Press **`Space + r`**.
 3. Type the new name and press `Enter`. The language server (`vtsls`) updates all references across files.
 4. Type **`:wa`** and press `Enter` to commit the modified buffers to disk.
 

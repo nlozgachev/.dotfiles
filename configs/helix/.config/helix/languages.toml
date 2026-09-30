@@ -78,7 +78,7 @@ args = ["--stdio"]
 name = "typescript"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # TSX
@@ -86,7 +86,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "tsx"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JavaScript
@@ -94,7 +94,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "javascript"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JSX
@@ -102,7 +102,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "jsx"
 language-servers = ["vtsls", "oxlint"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # HTML
@@ -110,7 +110,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "html"
 language-servers = ["vscode-html-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # CSS
@@ -118,7 +118,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "css"
 language-servers = ["vscode-css-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # SCSS
@@ -126,7 +126,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "scss"
 language-servers = ["vscode-css-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # JSON
@@ -134,7 +134,7 @@ indent = { tab-width = 2, unit = "  " }
 name = "json"
 language-servers = ["vscode-json-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # Go
@@ -173,13 +173,14 @@ indent = { tab-width = 4, unit = "    " }
 name = "markdown"
 language-servers = ["marksman"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # TOML
 [[language]]
 name = "toml"
 auto-format = true
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
 
 # YAML
@@ -187,5 +188,13 @@ indent = { tab-width = 2, unit = "  " }
 name = "yaml"
 language-servers = ["yaml-language-server"]
 auto-format = true
-formatter = { command = "oxfmt", args = ["--stdin-filepath", "{0}"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
+indent = { tab-width = 2, unit = "  " }
+
+# Astro
+[[language]]
+name = "astro"
+language-servers = ["astro-ls"]
+auto-format = true
+formatter = { command = "dprint", args = ["fmt", "--stdin", "%{buffer_name}"] }
 indent = { tab-width = 2, unit = "  " }
