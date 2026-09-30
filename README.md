@@ -1,109 +1,122 @@
 # .dotfiles
 
-macOS developer configuration for [fish](https://fishshell.com), [git](https://git-scm.com), [helix](https://helix-editor.com), [tmux](https://github.com/tmux/tmux), [ghostty](https://ghostty.org), and [mise](https://mise.jdx.dev).
+A terminal-first development setup built to replace heavy IDEs with fast, keyboard-driven tools.
 
-Unified with the **Tomorrow Night Blue** theme across all tools.
 
-Managed with [stow](https://www.gnu.org/software/stow/) and [just](https://just.systems).
+## The Stack
+
+* **[Kitty](https://sw.kovidgoyal.net/kitty/)**: Terminal emulator.
+* **[Fish](https://fishshell.com/)**: Shell with autosuggestions and completions.
+* **[Zellij](https://zellij.dev/)**: Terminal multiplexer (tabs, panes, sessions).
+* **[Helix](https://helix-editor.com/)**: Modal text editor with built-in LSP support.
+* **[GitUI](https://github.com/extrawurst/gitui)**: Terminal UI for git staging, diffs, and commits.
+* **[dprint](https://dprint.dev/)**: Fast, pluggable code formatter.
+* **[Mise](https://mise.jdx.dev/)**: Runtime and tool version manager (Node, Go, Deno).
+* **[GNU Stow](https://www.gnu.org/software/stow/)**: Symlink manager for dotfiles.
+* **[just](https://just.systems/)**: Command runner for setup and maintenance.
+
 
 ## Structure
 
 ```
-configs/          stow packages — each mirrors ~/
-├── fish/         fish shell
-├── ghostty/      ghostty terminal
-├── git/          git
-├── helix/        helix editor (polyglot + oxfmt/oxlint + format on save)
-├── mise/         mise tool configuration
-└── tmux/         tmux
-justfile          task runner
+configs/      stow packages — each mirrors ~/
+├── dprint/
+├── fish/
+├── git/
+├── gitui/
+├── helix/
+├── kitty/
+├── mise/
+└── zellij/
+justfile      task runner & bootstrap recipes
 ```
 
-## Fresh machine setup
 
-**1. Install Homebrew** (manual — nothing else is available yet)
+## Fresh Machine Setup
 
+**1. Install Homebrew** (manual — nothing else is available yet):
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-**2. Install `just`**
-
+**2. Install `just`**:
 ```sh
 brew install just
 ```
 
-**3. Install packages, fonts, and symlink configs**
-
+**3. Install packages, fonts, zjstatus plugin, and symlink configs**:
 ```sh
 just setup
 ```
 
-## Machine-specific config (not tracked in repo)
+**4. Install language toolchains & LSPs**:
+```sh
+just langs
+```
 
-### Git identity
+---
 
+## Languages & Toolchains
+
+Runtimes and language servers are managed via **[mise](https://mise.jdx.dev)**, **[uv](https://docs.astral.sh/uv)**, **[rustup](https://rustup.rs)**, and **npm**:
+
+```sh
+just node          # Node.js LTS + pnpm (via mise)
+just frontend      # dprint, oxlint, TypeScript, vtsls, web & Astro LSPs (via npm)
+just deno          # Deno (via mise)
+just go            # Go + gopls (via mise)
+just python        # Python (latest via uv) + ruff & pyright
+just rust          # Rust (via rustup) + rust-analyzer
+just langs         # Install all of the above
+```
+
+---
+
+## CLI Shortcuts
+
+Common shortcuts configured in Fish:
+
+| Command | Action | Description |
+| :--- | :--- | :--- |
+| `ws` | Workspace | Resumes most recent Zellij session (or starts default layout) |
+| `ws <name>` | Named Workspace | Attaches to or creates named workspace session |
+| `ws ls` | List Workspaces | Lists active sessions |
+| `ws k <name>`| Kill Workspace | Terminates a workspace session |
+| `ed <path>` | Editor | Launches `$EDITOR` (Helix) |
+| `gg` | Git UI | Launches GitUI in current folder |
+| `md <file>` | Markdown View | Renders Markdown with inline images (`mdcat`) |
+
+Package manager abbreviations expand in-place:
+* `pn` → `pnpm`
+* `pnd` → `pnpm dev`
+* `pns` → `pnpm storybook`
+* `pnt` → `pnpm test:dev`
+
+---
+
+## Machine-Specific Config (Untracked)
+
+### Git Identity
 Create `~/.gitconfig-local` with your email and signing key:
-
 ```ini
 [user]
     email = you@example.com
     signingkey = YOUR_GPG_KEY_FINGERPRINT
 ```
+Included automatically by `.gitconfig`.
 
-The tracked `.gitconfig` includes this file automatically via `[include]`.
-
-### Fish local config
-
-Create `~/.config/fish/local.fish` for per-machine settings: secrets, env vars, work-only tools.
-
+### Fish Local Config
+Create `~/.config/fish/local.fish` for machine-specific environment variables or work secrets:
 ```fish
-# Example: work machine
 set -gx SOME_API_KEY "..."
-source ~/.asdf/plugins/java/set-java-home.fish
 ```
+Loaded automatically at the end of `config.fish`.
 
-Loaded automatically at the end of `config.fish`. This file should never be committed.
+---
 
-## Languages & Development Tools
-
-Installed via [mise](https://mise.jdx.dev) (Node, Deno, Go, Swift), [uv](https://docs.astral.sh/uv) (Python), and [rustup](https://rustup.rs) (Rust):
+## Tasks
 
 ```sh
-just node          # Node.js LTS + pnpm
-just frontend      # oxlint, oxfmt, TypeScript LSP, web LSPs
-just deno          # Deno
-just go            # Go + gopls
-just python        # Python (latest via uv) + ruff
-just rust          # Rust (via rustup) + rust-analyzer
-just langs         # all of the above
-```
-
-## Helix Editor
-
-Configured for polyglot development with a VSCode-familiar experience:
-- **Tomorrow Night Blue** theme.
-- **Global format-on-save** (`oxfmt` for TS/JS/HTML/CSS/JSON/MD/YAML, `gopls` for Go, `ruff` for Python, `rustfmt` for Rust, `swift-format` for Swift, `jdtls` for Java, `taplo` for TOML).
-- **Fast diagnostics**: `oxlint` LSP for instant JS/TS checks.
-- **Mouse controls enabled**: click to position cursor, drag to select, scroll wheel.
-- **Bufferline tabs**: open file tabs always displayed at the top.
-- **Navigation shortcuts**:
-  - `Ctrl+P`: Fuzzy open files (`file_picker`)
-  - `Ctrl+S`: Save & format on save (both normal and insert mode)
-  - `Alt+W`: Close current tab / buffer
-  - `Tab` / `Shift+Tab`: Switch to next / previous buffer tab
-  - `gn` / `gp`: Switch to next / previous buffer
-  - `Ctrl+W` / `Space+W`: Window mode (splits: `v` vertical, `s` horizontal, `q` close)
-  - `F12` / `gd`: Go to definition
-  - `Ctrl+O`: Jump back in history
-  - `Space+k` / `K`: Hover documentation
-  - `Ctrl+C`: Toggle comments
-  - `Alt+X`: Command palette
-
-> **Full Tutorial & Cheatsheet**: See [HELIX_GUIDE.md](HELIX_GUIDE.md) for a comprehensive guide on modal editing, text objects (`mi"`), multi-cursors, and daily workflows.
-
-## All tasks
-
-```sh
-just           # list all available tasks
+just           # List all available recipes
+just update    # Update homebrew, mise, tools, rust, and LSPs
 ```
