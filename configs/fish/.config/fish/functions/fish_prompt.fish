@@ -1,90 +1,64 @@
 function fish_prompt
-    set -l __last_command_exit_status $status
+    set -l last_status $status
 
-    if not set -q -g __fish_arrow_functions_defined
-        set -g __fish_arrow_functions_defined
-        function _git_branch_name
-            set -l branch (git symbolic-ref --quiet HEAD 2>/dev/null)
-            if set -q branch[1]
-                echo (string replace -r '^refs/heads/' '' $branch)
-            else
-                echo (git rev-parse --short HEAD 2>/dev/null)
-            end
-        end
+    # ── Tomorrow Night Blue Palette ──────────────────────────────────────────
+    set -l c_line bbdaff        # Vibrant Ice Blue for rails, lines & bend
+    set -l c_dir  ffffff        # Crisp White for directory
+    set -l c_git  ffeead        # Warm Yellow for git branch
+    set -l c_ok   d1f1a9        # Pastel Green for success circle
+    set -l c_err  ff9da4        # Pastel Red for error circle
+    set -l circle "●"
 
-        function _is_git_dirty
-            not command git diff-index --cached --quiet HEAD -- &>/dev/null
-            or not command git diff --no-ext-diff --quiet --exit-code &>/dev/null
-        end
-
-        function _is_git_repo
-            type -q git
-            or return 1
-            git rev-parse --git-dir >/dev/null 2>&1
-        end
-
-        function _hg_branch_name
-            echo (hg branch 2>/dev/null)
-        end
-
-        function _is_hg_dirty
-            set -l stat (hg status -mard 2>/dev/null)
-            test -n "$stat"
-        end
-
-        function _is_hg_repo
-            fish_print_hg_root >/dev/null
-        end
-
-        function _repo_branch_name
-            _$argv[1]_branch_name
-        end
-
-        function _is_repo_dirty
-            _is_$argv[1]_dirty
-        end
-
-        function _repo_type
-            if _is_hg_repo
-                echo hg
-                return 0
-            else if _is_git_repo
-                echo git
-                return 0
-            end
-            return 1
-        end
+    # ── Directory (single level via Fish builtins, zero process forks) ───────
+    set -l dir_str ""
+    if test "$PWD" = "$HOME"
+        set dir_str "~"
+    else if test "$PWD" = "/"
+        set dir_str "/"
+    else
+        set dir_str (path basename "$PWD")
     end
 
-    set -l cyan (set_color -o cyan)
-    set -l yellow (set_color -o yellow)
-    set -l red (set_color -o red)
-    set -l green (set_color -o green)
-    set -l blue (set_color -o blue)
-    set -l normal (set_color normal)
-
-    set -l arrow_color "$green"
-    if test $__last_command_exit_status != 0
-        set arrow_color "$red"
+    # ── Git Status (Single git call with --no-optional-locks) ─────────────────
+    set -l git_str ""
+    set -l lines (git --no-optional-locks status --porcelain=v1 -b 2>/dev/null)
+    if test $status -eq 0
+        set -l branch (string match -r "^## (?:Initial commit on |No commits yet on )?(\S+?)(?:\.\.\.|\s|\$)" $lines[1])[2]
+        test -z "$branch"; and set branch "HEAD"
+        set git_str "$branch"
+        test (count $lines) -gt 1; and set git_str "$git_str ✗"
     end
 
-    set -l arrow "$arrow_color--> "
+    # ── Assemble Top Line ────────────────────────────────────────────────────
+    set -l left_rendered (echo -s (set_color $c_line) "╭───── " (set_color -o $c_dir) "$dir_str" (set_color normal))
+    set -l left_len (math "7 + " (string length -- "$dir_str"))
+
+    if test -n "$git_str"
+        set left_rendered (echo -s "$left_rendered" (set_color $c_line) " ─ " (set_color -o $c_git) "$git_str" (set_color normal))
+        set left_len (math "$left_len + 3 + " (string length -- "$git_str"))
+    end
+
+    set -l status_color $c_ok
+    test $last_status -ne 0; and set status_color $c_err
+
+    set -l cols $COLUMNS
+    test -z "$cols"; and set cols 80
+
+    # 7 (╭───── ) + 2 ( ─) + 1 (space) + 1 (●) + 5 ( ────) = 16 fixed chars; target width cols - 1
+    set -l fill_count (math "$cols - $left_len - 10")
+
+    if test $fill_count -gt 1
+        set -l fill (string repeat -n $fill_count "─")
+        echo -s "$left_rendered" (set_color $c_line) " ─$fill " (set_color $status_color) "$circle" (set_color normal) " " (set_color $c_line) "────" (set_color normal)
+    else
+        echo -s "$left_rendered" (set_color normal)
+    end
+
+    # ── Render Bottom Line (Clean Box Bend) ──────────────────────────────────
+    set -l prompt_char "╰─ "
     if fish_is_root_user
-        set arrow "$arrow_color# "
+        set prompt_char "╰─# "
     end
 
-    set -l cwd $cyan(basename (prompt_pwd))
-
-    set -l repo_info
-    if set -l repo_type (_repo_type)
-        set -l repo_branch $red(_repo_branch_name $repo_type)
-        set repo_info "$blue $repo_type:($repo_branch$blue)"
-
-        if _is_repo_dirty $repo_type
-            set -l dirty "$yellow ✗"
-            set repo_info "$repo_info$dirty"
-        end
-    end
-
-    echo -n -s $arrow ' '$cwd $repo_info $normal ' '
+    echo -s (set_color $c_line) "$prompt_char" (set_color normal)
 end

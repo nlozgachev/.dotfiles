@@ -35,18 +35,8 @@ switch "$cmd"
         end
         test -z "$base_branch"; and set base_branch (git branch --show-current 2>/dev/null; or echo "HEAD")
         set -l branch_types feature bugfix hotfix release chore
-        set -l type ""
-        if test -t 0; and type -q fzf
-            set type (printf "%s\n" $branch_types | fzf --height=8 --reverse --prompt="Branch type > ")
-        else
-            echo "Select task type:" >&2
-            for i in (seq (count $branch_types))
-                echo "  $i. $branch_types[$i]" >&2
-            end
-            read -l -P "Choice [1-5]: " type_idx
-            set type $branch_types[$type_idx]
-        end
-        test -z "$type"; and echo "Invalid choice" >&2; and exit 1
+        set -l type (printf "%s\n" $branch_types | fzf --height=8 --reverse --prompt="Branch type > ")
+        test -z "$type"; and echo "No branch type selected" >&2; and exit 1
 
         read -l -P "Task ID (optional, e.g. 1234): " task_id
         read -l -P "Description (required): " raw_desc
@@ -88,17 +78,7 @@ switch "$cmd"
             "ci: CI/CD configuration changes" \
             "build: Build system changes"
 
-        set -l selected_type ""
-        if test -t 0; and type -q fzf
-            set selected_type (printf "%s\n" $commit_types | fzf --height=12 --reverse --prompt="Commit type > " | string split ":" -f1)
-        else
-            echo "Select change type:" >&2
-            for i in (seq (count $commit_types))
-                echo "  $i. $commit_types[$i]" >&2
-            end
-            read -l -P "Choice [1-10]: " type_idx
-            set selected_type (string split ":" -f1 $commit_types[$type_idx])
-        end
+        set -l selected_type (printf "%s\n" $commit_types | fzf --height=12 --reverse --prompt="Commit type > " | string split ":" -f1)
         test -z "$selected_type"; and echo "No change type selected" >&2; and exit 1
 
         read -l -P "Commit message (required): " msg
