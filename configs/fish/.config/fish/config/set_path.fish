@@ -1,22 +1,27 @@
-# Homebrew
-fish_add_path /opt/homebrew/bin
-fish_add_path /opt/homebrew/sbin
-fish_add_path $HOME/.bin
-fish_add_path $HOME/.local/bin
+set -gx BUN_INSTALL "$HOME/.bun"
 
-# Rust
-fish_add_path $HOME/.cargo/bin
-
-# Go
-fish_add_path $HOME/go/bin
+fish_add_path \
+    /opt/homebrew/bin \
+    /opt/homebrew/sbin \
+    $HOME/.bin \
+    $HOME/.local/bin \
+    $HOME/.cargo/bin \
+    $HOME/go/bin \
+    $PNPM_HOME \
+    $HOME/.local/share/mise/shims
 
 # pnpm
 fish_add_path $PNPM_HOME
 
 if status is-interactive
-  mise activate fish | source
-else
-  mise activate fish --shims | source
-end
+    if type -q mise
+        mise activate fish | source
+    end
 
-fzf --fish | source
+    set -l fzf_cache "$__fish_config_dir/config/fzf.fish"
+    if test -f "$fzf_cache"
+        source "$fzf_cache"
+    else if type -q fzf
+        fzf --fish | source
+    end
+end
