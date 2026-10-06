@@ -1,5 +1,3 @@
-set -g fish_greeting ""
-
 set -gx EDITOR hx
 test -z "$TERM"; and set -gx TERM xterm-256color
 set -gx PNPM_HOME $HOME/.pnpm-global

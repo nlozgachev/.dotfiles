@@ -40,14 +40,40 @@ packages:
         jaq zoxide tealdeer sd mdcat
     brew install --cask kitty
 
-# Refresh macOS Dock icon cache
-dock-cache:
-    rm -f /var/folders/*/*/*/com.apple.dock.iconcache
-    killall Dock
+# Dump installed Homebrew packages to Brewfile
+brew-dump:
+    brew bundle dump --file=Brewfile --force
+
+# Install packages from Brewfile
+brew-bundle:
+    brew bundle --file=Brewfile --no-lock
 
 # Install fonts
 fonts:
     brew install --cask font-iosevka-nerd-font font-iosevka-term-nerd-font
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+
+# Apply developer-friendly macOS system defaults
+macos:
+    ./scripts/macos.fish
+
+# Enable Touch ID for sudo (survives macOS updates via sudo_local)
+sudo-touchid:
+    #!/usr/bin/env -S fish --no-config
+    if test -f /etc/pam.d/sudo_local
+        echo "Touch ID for sudo is already enabled in /etc/pam.d/sudo_local"
+    else
+        echo "Enabling Touch ID for sudo (admin password required)..."
+        echo "auth       sufficient     pam_tid.so" | sudo tee /etc/pam.d/sudo_local > /dev/null
+        sudo chmod 444 /etc/pam.d/sudo_local
+        echo "Touch ID for sudo enabled successfully."
+    end
+
+# Refresh macOS Dock icon cache
+dock-cache:
+    rm -f /var/folders/*/*/*/com.apple.dock.iconcache
+    killall Dock
 
 # ── Languages & Dev Tooling ───────────────────────────────────────────────────
 
@@ -135,10 +161,11 @@ gpg-install:
 
 # Configure gpg-agent to use pinentry-mac
 gpg-agent:
-    #!/bin/sh
+    #!/usr/bin/env -S fish --no-config
     mkdir -p ~/.gnupg
     chmod 700 ~/.gnupg
-    echo "pinentry-program $(brew --prefix)/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
+    set -l prefix (brew --prefix)
+    echo "pinentry-program $prefix/bin/pinentry-mac" > ~/.gnupg/gpg-agent.conf
     chmod 600 ~/.gnupg/gpg-agent.conf
     gpgconf --kill gpg-agent
 

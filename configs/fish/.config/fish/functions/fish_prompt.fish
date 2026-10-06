@@ -19,14 +19,14 @@ function fish_prompt
         set dir_str (path basename "$PWD")
     end
 
-    # git status
+    # git status (ignores untracked files, marks tracked modifications with *)
     set -l git_str ""
-    set -l lines (git --no-optional-locks status --porcelain=v1 -b 2>/dev/null)
+    set -l lines (git --no-optional-locks status --porcelain=v1 -b --untracked-files=no 2>/dev/null)
     if test $status -eq 0
         set -l branch (string match -r "^## (?:Initial commit on |No commits yet on )?(\S+?)(?:\.\.\.|\s|\$)" $lines[1])[2]
         test -z "$branch"; and set branch "HEAD"
         set git_str "$branch"
-        test (count $lines) -gt 1; and set git_str "$git_str ✗"
+        test (count $lines) -gt 1; and set git_str "$git_str*"
     end
 
     set -l status_color $c_ok

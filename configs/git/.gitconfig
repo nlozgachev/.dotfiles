@@ -6,6 +6,10 @@
 	editor = hx
 	pager = delta
 	excludesfile = ~/.config/git/ignore
+	precomposeUnicode = true
+	fsmonitor = true
+[credential]
+	helper = osxkeychain
 [interactive]
 	diffFilter = delta --color-only
 [delta]
@@ -25,10 +29,15 @@
 	prune = true
 [diff]
 	algorithm = histogram
+	colorMoved = default
 [merge]
 	conflictstyle = zdiff3
 [rebase]
 	autoStash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+	autoupdate = true
 [branch]
 	sort = -committerdate
 [alias]
