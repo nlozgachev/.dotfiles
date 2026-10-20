@@ -86,15 +86,22 @@ C-b = "buffer_picker"
 C-r = ":reload"
 C-z = "undo"
 C-y = "redo"
+C-c = "toggle_comments"
 "C-/" = "toggle_comments"
-"A-[" = "jump_backward"
-"A-]" = "jump_forward"
+"C-[" = "goto_previous_buffer"
+"C-]" = "goto_next_buffer"
+"C-S-[" = "jump_backward"
+"C-S-]" = "jump_forward"
+"C-{" = "jump_backward"
+"C-}" = "jump_forward"
 "C-tab" = "goto_next_buffer"
 "C-S-tab" = "goto_previous_buffer"
 "Cmd-c" = "yank"
 "Cmd-v" = "paste_after"
 
 [keys.select]
+C-c = "toggle_comments"
+"C-/" = "toggle_comments"
 "Cmd-c" = "yank"
 
 [keys.normal.space]
@@ -102,3 +109,5 @@ i = ":toggle lsp.display-inlay-hints"
 
 [keys.insert]
 C-s = ":write"
+C-c = "toggle_comments"
+"C-/" = "toggle_comments"

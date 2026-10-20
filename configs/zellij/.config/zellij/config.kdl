@@ -35,7 +35,11 @@ keybinds clear-defaults=true {
         bind "Ctrl a" { SwitchToMode "Tmux"; }
         bind "Ctrl q" { Quit; }
 
-        // ── Direct Tab Management (Browser Cmd+1..9, Cmd+T) ─
+        // ── Zellij Workspace Tabs (Option / Alt) ────────────
+        bind "Alt [" { GoToPreviousTab; }
+        bind "Alt ]" { GoToNextTab; }
+        bind "Alt t" { NewTab; }
+        bind "Alt w" { CloseTab; }
         bind "Alt 1" { GoToTab 1; }
         bind "Alt 2" { GoToTab 2; }
         bind "Alt 3" { GoToTab 3; }
@@ -45,19 +49,17 @@ keybinds clear-defaults=true {
         bind "Alt 7" { GoToTab 7; }
         bind "Alt 8" { GoToTab 8; }
         bind "Alt 9" { GoToTab 9; }
-        bind "Alt t" { NewTab; }
-        bind "Alt }" { GoToNextTab; }
-        bind "Alt {" { GoToPreviousTab; }
-        bind "Alt Shift w" { CloseTab; }
 
-        // ── Direct Pane Navigation (Cmd+Down/Up, Cmd+J/K) ────
+        // ── Zellij Panes & Navigation (Option / Alt) ─────────
         bind "Alt j" "Alt Down"  { MoveFocus "Down"; }
         bind "Alt k" "Alt Up"    { MoveFocus "Up"; }
         bind "Alt h" "Alt Left"  { MoveFocus "Left"; }
         bind "Alt l" "Alt Right" { MoveFocus "Right"; }
-        bind "Alt z" "Alt f"     { ToggleFocusFullscreen; }
-        bind "Alt `"             { ToggleFloatingPanes; }
-        bind "Alt Shift x"       { CloseFocus; }
+        bind "Alt z"             { ToggleFocusFullscreen; }
+        bind "Alt x"             { CloseFocus; }
+        bind "Alt `" "Alt p"     { ToggleFloatingPanes; }
+        bind "Alt |"             { NewPane "Right"; }
+        bind "Alt -"             { NewPane "Down"; }
     }
 
     locked {
