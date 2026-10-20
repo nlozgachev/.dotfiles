@@ -28,11 +28,16 @@ Switch tabs with `Ctrl + a` → `t` → `Tab` (or `1` / `2`). Switch panes with 
 ### 4. Essential Daily Shortcuts
 | Action | Shortcut | Details |
 | :--- | :--- | :--- |
-| **Open File** | `Space + f` | Fuzzy file finder; type 2–3 letters |
-| **Global Search** | `Space + /` | Search across repository |
-| **Save & Format** | `Cmd + S` *(or `Ctrl + s` / `:w`)* | Saves file and formats with `dprint` |
-| **Switch Panes** | `Ctrl + a` → `p` → `h`/`j`/`k`/`l` | Move focus between editor, server, and git |
-| **Zoom Pane** | `Ctrl + a` → `p` → `z` | Maximize focused pane; press again to restore |
+| **Open File** | `Cmd + P` *(or `Space + f`)* | Fuzzy file finder; type 2–3 letters |
+| **Global Search** | `Cmd + Shift + F` *(or `Space + /`)* | Search across repository |
+| **Close File Tab** | `Cmd + W` *(or `:bc`)* | Closes active buffer tab |
+| **Save & Format** | `Cmd + S` *(or `Ctrl + s` / `:w`)* | Saves file and formats with `dprint` / `oxfmt` |
+| **Undo / Redo** | `Cmd + Z` / `Cmd + Shift + Z` | Undo and redo in Normal mode |
+| **History: Back / Fwd** | `Cmd + [` / `Cmd + ]` | Jump backward / forward across files (jumplist) |
+| **Switch Panes** | `Cmd + Down` / `Up` *(or `Alt + j`/`k`)* | Instantly jump focus between Helix and Terminal |
+| **Zoom Pane** | `Cmd + Shift + Enter` *(or `Alt + z`)* | Maximize focused pane; press again to restore |
+| **Switch Workspace Tabs**| `Cmd + 1` .. `Cmd + 9` *(or `Alt + 1..9`)*| Jump directly to Tab (1: Code, 2: Git) |
+| **New Workspace Tab** | `Cmd + T` *(or `Alt + t`)* | Open a new Zellij tab |
 | **Stage Changes** | In GitUI: `Enter` on file | Stages highlighted file (`→` into diff to stage hunks/lines) |
 
 ---
@@ -99,33 +104,34 @@ Sessions persist in the background across disconnects and terminal restarts.
 | **Quit Zellij** | `Ctrl + q` *(or `Ctrl + a` → `q`)* | Exit session and terminate all running processes |
 
 ### Tabs (Virtual Workspaces)
-Tabs appear along the bottom status bar with clean numbering. All tab management routes through `Ctrl + a` then `t`:
+Tabs appear along the bottom status bar with clean numbering. Tabs can be switched and created directly with browser `Cmd` shortcuts (or `Alt`), or routed through the `Ctrl + a` → `t` menu:
 
-| Action | Shortcut | Description |
-| :--- | :--- | :--- |
-| **New tab** | `Ctrl + a` → `t` → `c` | Open a new tab |
-| **Switch to tab N** | `Ctrl + a` → `t` → `1` .. `9` | Switch directly to tab index |
-| **Next / Prev tab** | `Ctrl + a` → `t` → `Tab` / `p` | Cycle through tabs |
-| **Move tab left / right** | `Ctrl + a` → `t` → `h` / `l` *(or arrows)* | Shift tab position left or right (`Enter`/`Esc` done) |
-| **Rename tab** | `Ctrl + a` → `t` → `,` | Rename the active tab (`Enter` to save, `Esc` to cancel) |
-| **Close tab** | `Ctrl + a` → `t` → `x` | Close the current tab |
+| Action | Fast Shortcut | Menu Fallback | Description |
+| :--- | :--- | :--- | :--- |
+| **New tab** | `Cmd + T` *(or `Alt + t`)* | `Ctrl + a` → `t` → `c` | Open a new tab |
+| **Switch to tab N** | `Cmd + 1` .. `Cmd + 9` | `Ctrl + a` → `t` → `1` .. `9` | Switch directly to tab index |
+| **Next / Prev tab** | `Cmd + Shift + ]` / `[` | `Ctrl + a` → `t` → `Tab` / `p` | Cycle through tabs |
+| **Move tab left / right** | — | `Ctrl + a` → `t` → `h` / `l` | Shift tab position left or right (`Enter`/`Esc` done) |
+| **Rename tab** | — | `Ctrl + a` → `t` → `,` | Rename the active tab (`Enter` to save, `Esc` to cancel) |
+| **Close tab** | `Alt + Shift + w` | `Ctrl + a` → `t` → `x` | Close the current tab |
 
 ### Panes & Navigation (Tiled & Floating Splits)
-Panes divide the window into active terminal regions. All pane management routes through `Ctrl + a` then `p`:
+Panes divide the window into active terminal regions. Most frequent actions have fast single-keystroke `Cmd` and `Alt` shortcuts, while full pane control is available via `Ctrl + a` → `p`:
 
-| Action | Shortcut | Description |
-| :--- | :--- | :--- |
-| **Split vertical** | `Ctrl + a` → `p` → `\|` | Split pane left and right |
-| **Split horizontal** | `Ctrl + a` → `p` → `-` | Split pane top and bottom |
-| **New unconstrained pane** | `Ctrl + a` → `p` → `n` | Create a new pane in default orientation |
-| **Navigate panes** | `Ctrl + a` → `p` → `h` / `j` / `k` / `l` *(or arrows)* | Move focus left, down, up, or right |
-| **Cycle focus** | `Ctrl + a` → `p` → `o` | Move focus to the next pane |
-| **Toggle zoom** | `Ctrl + a` → `p` → `z` | Maximize current pane to 100% (press again to restore) |
-| **Toggle floating pane** | `Ctrl + a` → `p` → `w` | Toggle a floating scratch pane over layout |
-| **Rename pane** | `Ctrl + a` → `p` → `,` | Rename focused pane (`Enter` to save, `Esc` to cancel) |
-| **Break to new tab** | `Ctrl + a` → `p` → `b` | Move focused pane out into a new tab |
-| **Move pane to left / right tab** | `Ctrl + a` → `p` → `[` / `]` | Send focused pane into adjacent tab |
-| **Close focused pane** | `Ctrl + a` → `p` → `x` | Close active pane |
+| Action | Fast Shortcut | Menu Fallback | Description |
+| :--- | :--- | :--- | :--- |
+| **Switch Editor / Terminal** | `Cmd + Down` / `Cmd + Up` | `Ctrl + a` → `p` → `j` / `k` | Jump focus between Helix and Terminal |
+| **Navigate panes** | `Alt + h` / `j` / `k` / `l` *(or arrows)* | `Ctrl + a` → `p` → `h` / `j` / `k` / `l` | Move focus in direction |
+| **Toggle zoom** | `Cmd + Shift + Enter` *(or `Alt + z`)* | `Ctrl + a` → `p` → `z` | Maximize current pane to 100% (press again to restore) |
+| **Toggle floating pane** | `Cmd + Option + P` *(or `Alt + \``)* | `Ctrl + a` → `p` → `w` | Toggle a floating scratch pane over layout |
+| **Close focused pane** | `Alt + Shift + x` | `Ctrl + a` → `p` → `x` | Close active pane |
+| **Split vertical** | `Alt + \|` | `Ctrl + a` → `p` → `\|` | Split pane left and right |
+| **Split horizontal** | `Alt + -` | `Ctrl + a` → `p` → `-` | Split pane top and bottom |
+| **New unconstrained pane** | `Alt + n` | `Ctrl + a` → `p` → `n` | Create a new pane in default orientation |
+| **Cycle focus** | — | `Ctrl + a` → `p` → `o` | Move focus to the next pane |
+| **Rename pane** | — | `Ctrl + a` → `p` → `,` | Rename focused pane (`Enter` to save, `Esc` to cancel) |
+| **Break to new tab** | — | `Ctrl + a` → `p` → `b` | Move focused pane out into a new tab |
+| **Move pane to adjacent tab**| — | `Ctrl + a` → `p` → `[` / `]` | Send focused pane into adjacent tab |
 
 ### Modes & Utilities
 Dedicated modal states provide interactive manipulation without key collisions:
@@ -273,11 +279,14 @@ Helix is a modal, selection-first editor. Actions apply to the currently selecte
 
 | Shortcut | Action | Description |
 | :--- | :--- | :--- |
-| `gn` / `gp` | Next / Prev Buffer | Cycle to next or previous open buffer |
-| `Space + b` | Buffer Picker | Interactive fuzzy search of open buffers |
-| `:bc` *(or `:bc!`)* | Close Buffer | Close current buffer tab (`!` forces close without save) |
-| `:open <path>` | Open / Create File | Opens file; creates directories automatically on save |
-| `:reload` *(or `:rl`)* | Reload File | Reload current file from disk (syncs external changes) |
+| `Cmd + P` *(or `Space + f`)* | File Picker | Fuzzy search files across repository |
+| `Cmd + Shift + F` *(or `Space + /`)* | Global Search | Search text across repository |
+| `Cmd + F` *(or `/`)* | Find in Buffer | Search within the current file |
+| `Cmd + W` *(or `:bc`)* | Close Buffer | Close current buffer tab (`:bc!` forces close without save) |
+| `Cmd + B` *(or `Space + b`)* | Buffer Picker | Interactive fuzzy search of open buffers |
+| `Cmd + [` / `Cmd + ]` | History Back / Fwd | Jump backward / forward across files (jumplist) |
+| `Cmd + Tab` / `gn` / `gp` | Next / Prev Buffer | Cycle to next or previous open buffer |
+| `Cmd + R` *(or `:rl`)* | Reload File | Reload current file from disk (syncs external changes) |
 | `:reload-all` *(or `:rla`)* | Reload All Files | Reload all open buffers from disk |
 | `:wa` | Write All | Saves all open, modified buffers to disk |
 
@@ -396,17 +405,21 @@ This environment is optimized for web/frontend development:
 
 | VSCode Feature / Action | VSCode Shortcut | Terminal Equivalent | Details |
 | :--- | :--- | :--- | :--- |
-| **File Picker** | `Cmd + P` | `Space + f` | Fuzzy search by filename |
-| **Global Text Search** | `Cmd + Shift + F` | `Space + /` | Search across files |
+| **File Picker** | `Cmd + P` | `Cmd + P` *(or `Space + f`)* | Fuzzy search by filename |
+| **Global Text Search** | `Cmd + Shift + F` | `Cmd + Shift + F` *(or `Space + /`)* | Search across files |
+| **Find in File** | `Cmd + F` | `Cmd + F` *(or `/`)* | Search in current buffer |
+| **Close Tab / Buffer** | `Cmd + W` | `Cmd + W` *(or `:bc`)* | Closes active buffer tab |
 | **Save & Format** | `Cmd + S` | `Cmd + S` / `:w` | Writes buffer and auto-formats (`hx-fmt`) |
+| **Undo / Redo** | `Cmd + Z` / `Cmd + Shift + Z` | `Cmd + Z` / `Cmd + Shift + Z` | Direct undo and redo in Normal mode |
+| **History: Back / Forward** | `Cmd + [` / `Cmd + ]` | `Cmd + [` / `Cmd + ]` | Jump backward / forward across files (jumplist) |
+| **Toggle Line Comment** | `Cmd + /` | `Cmd + /` *(or `Ctrl + c`)* | Comments/uncomments line or selection |
 | **Hover Types & Docs** | Hover / `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signatures and documentation |
 | **Toggle Inlay Hints** | Settings toggle | `Space + i` | Toggles inline type/parameter annotations |
 | **Code Actions & Fixes** | `Cmd + .` | `Space + a` | Quick fixes, imports, linter actions |
-| **Go to Definition** | `F12` / `Cmd + Click` | `gd` | Jump to definition (`Ctrl + o` returns) |
+| **Go to Definition** | `F12` / `Cmd + Click` | `gd` | Jump to definition (`Cmd + [` returns) |
 | **Find All References** | `Shift + F12` | `gr` | Opens reference list in fuzzy picker |
 | **Project-Wide Rename** | `F2` | `Space + r` | Updates all references; commit with `:wa` |
 | **Next / Prev Diagnostic** | `F8` / `Shift + F8` | `]d` / `[d` | Jump directly to next/previous error |
-| **Toggle Line Comment** | `Cmd + /` | `Ctrl + c` | Comments/uncomments line or selection |
 | **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
 | **Multi-Cursor Add Below** | `Cmd + Option + ↓` | `C` | Adds cursor to line below |
 | **Multi-Cursor Add Above** | `Cmd + Option + ↑` | `Option + C` *(⌥ + Shift + c)* | Adds cursor to line above |
@@ -414,17 +427,30 @@ This environment is optimized for web/frontend development:
 | **Multi-Cursor Match Next**| `Cmd + D` | `*` → `s` → `Enter` | Select matches across buffer |
 | **Clear Multi-Cursors** | `Esc` | `,` *(comma)* | Collapses back to single primary cursor |
 | **Git Status & Staging** | `Cmd + Shift + G` | `gg` (or Zellij Tab 2) | Interactive staging and diffs |
-| **Terminal Split / Float** | ``Ctrl + ` `` / `Cmd + J` | `Ctrl + a` → `p` → `-` / `Ctrl + a` → `p` → `w` | Split or floating pane in Zellij |
-| **Buffer Tabs** | Tab click | `gn` / `gp` (or `Space + b`) | Switch or search open buffer tabs |
-| **Close Tab** | `Cmd + W` | `:bc` | Closes active buffer tab |
-| **Reload from Disk** | Auto / Manual reload | `:rl` / `:rla` | Reload active / all buffers from disk |
+| **Switch Editor / Terminal**| `Cmd + J` / `Cmd + ` ` | `Cmd + Down` / `Cmd + Up` | Jump between Helix editor and Terminal |
+| **Zoom Active Pane** | `Cmd + Shift + Enter` | `Cmd + Shift + Enter` *(or `Alt + z`)* | Maximize focused pane |
+| **Workspace Tabs** | `Cmd + 1` .. `Cmd + 9` | `Cmd + 1` .. `Cmd + 9` | Direct jump to Tab (1: Code, 2: Git) |
+| **New Workspace Tab** | `Cmd + T` | `Cmd + T` *(or `Alt + t`)* | Open new workspace tab |
+| **Buffer Tabs** | Tab click | `Cmd + B` / `gn` / `gp` | Switch or search open buffer tabs |
+| **Reload from Disk** | Auto / Manual reload | `Cmd + R` *(or `:rl` / `:rla`)* | Reload active / all buffers from disk |
 
 ---
 
 ## 8. macOS Shortcuts & Ergonomics
 
-### 1. Kitty Native `Cmd + S` Save Bridge
-Kitty maps standard macOS `Cmd + S` to terminal `Ctrl + s` (\x13), which Helix listens to in both Normal and Insert mode to save and format immediately.
+### 1. Kitty Native `Cmd` Shortcuts Bridge
+Kitty maps standard macOS `Cmd` shortcuts directly to terminal control sequences, allowing you to use native browser muscle memory without memorizing multi-key menus:
+* `Cmd + P`: File picker (sends `\x10` → Helix `file_picker`).
+* `Cmd + F`: Find in buffer (sends `\x06` → Helix `search`).
+* `Cmd + Shift + F`: Global project search (sends `\x07` → Helix `global_search`).
+* `Cmd + W`: Close buffer tab (sends `\x17` → Helix `:buffer-close`).
+* `Cmd + S`: Save & format (sends `\x13` → Helix `:write`).
+* `Cmd + Z` / `Cmd + Shift + Z`: Undo / Redo in Normal mode.
+* `Cmd + [` / `Cmd + ]`: Navigate jumplist history back / forward across code definitions.
+* `Cmd + 1` .. `Cmd + 9`: Direct jump to Zellij tabs.
+* `Cmd + T`: Direct new Zellij tab.
+* `Cmd + Down` / `Cmd + Up`: Instant jump between Helix and Terminal panes.
+* `Cmd + Shift + Enter`: Toggle pane zoom (fullscreen).
 
 ### 2. Option Key as Alt (`macos_option_as_alt yes`)
 By default on macOS, the `⌥ Option` key types special characters (such as `å` or `ç`). Kitty is configured with `macos_option_as_alt yes`, mapping `Option` directly as `Alt`.

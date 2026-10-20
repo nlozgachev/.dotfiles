@@ -5,6 +5,7 @@ theme = "tomorrow_night_blue"
 [editor]
 auto-format = true
 mouse = true
+default-yank-register = "+"
 bufferline = "always"
 cursorline = true
 color-modes = true
@@ -77,6 +78,24 @@ layout = ["diagnostics", "spacer", "line-numbers", "spacer", "diff"]
 
 [keys.normal]
 C-s = ":write"
+C-p = "file_picker"
+C-f = "search"
+C-g = "global_search"
+C-w = ":buffer-close"
+C-b = "buffer_picker"
+C-r = ":reload"
+C-z = "undo"
+C-y = "redo"
+"C-/" = "toggle_comments"
+"A-[" = "jump_backward"
+"A-]" = "jump_forward"
+"C-tab" = "goto_next_buffer"
+"C-S-tab" = "goto_previous_buffer"
+"Cmd-c" = "yank"
+"Cmd-v" = "paste_after"
+
+[keys.select]
+"Cmd-c" = "yank"
 
 [keys.normal.space]
 i = ":toggle lsp.display-inlay-hints"
