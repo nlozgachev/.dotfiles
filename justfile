@@ -37,7 +37,7 @@ setup: mise-install packages fonts zjstatus link
 packages:
     brew install git git-delta fish stow helix uv \
         gitui zellij fd ripgrep bat eza fzf taplo \
-        jaq zoxide tealdeer sd mdcat
+        jaq zoxide tealdeer sd mdcat mergiraf
     brew install --cask kitty
 
 # Dump installed Homebrew packages to Brewfile

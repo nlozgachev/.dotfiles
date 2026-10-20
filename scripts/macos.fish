@@ -19,9 +19,6 @@ defaults write -g NSAutomaticCapitalizationEnabled -bool false
 # Show hidden files by default
 defaults write com.apple.finder AppleShowAllFiles -bool true
 
-# Show filename extensions by default
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
 # Show path bar at the bottom of Finder
 defaults write com.apple.finder ShowPathbar -bool true
 

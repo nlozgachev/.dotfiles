@@ -6,6 +6,7 @@
 	editor = hx
 	pager = delta
 	excludesfile = ~/.config/git/ignore
+	attributesfile = ~/.config/git/attributes
 	precomposeUnicode = true
 	fsmonitor = true
 [credential]
@@ -32,6 +33,9 @@
 	colorMoved = default
 [merge]
 	conflictstyle = zdiff3
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 [rebase]
 	autoStash = true
 	updateRefs = true
