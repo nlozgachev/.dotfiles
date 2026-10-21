@@ -35,7 +35,13 @@ Switch tabs with `Ctrl + a` → `t` → `Tab` (or `1` / `2`). Switch panes with 
 | **Close File Tab** | `Cmd + W` *(or `:bc`)* | Closes active buffer tab |
 | **Switch Buffer Tabs** | `Cmd + [` / `Cmd + ]` | Move to previous / next file tab in Helix |
 | **Jump Points Back/Fwd**| `Cmd + Shift + [` / `]` *(or `Ctrl + o/i`)*| Jump backward / forward across definitions (jumplist) |
+| **Multi-Cursor Next Match**| `Cmd + D` | Incrementally select next word occurrence |
+| **Quick Fix / Imports** | `Cmd + .` *(or `Space + a`)* | Trigger code actions, auto-imports, linter fixes |
+| **Hover Docs** | `Cmd + I` *(or `K`)* | View documentation / type signature under cursor |
+| **Next / Prev Error** | `Cmd + E` / `Cmd + Shift + E` | Jump directly to next / previous diagnostic |
 | **Toggle Comment** | `Cmd + /` *(or `Ctrl + c`)* | Comments/uncomments line or selection |
+| **Toggle Block Comment**| `Cmd + Shift + /` *(or `Space + C`)*| Wraps selection in block comments |
+| **Split Editor Right** | `Cmd + \` *(or `Ctrl + w` → `v`)* | Side-by-side vertical split |
 | **Save & Format** | `Cmd + S` *(or `Ctrl + s` / `:w`)* | Saves file and formats with `dprint` / `oxfmt` |
 | **Undo / Redo** | `Cmd + Z` / `Cmd + Shift + Z` | Undo and redo in Normal mode |
 
@@ -426,19 +432,20 @@ This environment is optimized for web/frontend development:
 | **Switch Buffer Tabs** | `Cmd + [` / `Cmd + ]` | `Cmd + [` / `Cmd + ]` | Move to previous / next file tab in Helix |
 | **Jump Points Back/Fwd**| `Cmd + Shift + [` / `]` | `Cmd + Shift + [` / `]` *(or `Ctrl + o/i`)*| Jump backward / forward across definitions (jumplist) |
 | **Toggle Line Comment** | `Cmd + /` | `Cmd + /` *(or `Ctrl + c`)* | Comments/uncomments line or selection |
-| **Hover Types & Docs** | Hover / `Cmd + K Cmd + I` | `Space + k` / `K` | Shows type signatures and documentation |
+| **Toggle Block Comment** | `Cmd + Shift + /` | `Cmd + Shift + /` *(or `Space + C`)*| Wraps selection in block comments |
+| **Hover Types & Docs** | `Cmd + I` | `Cmd + I` *(or `Space + k` / `K`)* | Shows type signatures and documentation |
 | **Toggle Inlay Hints** | Settings toggle | `Space + i` | Toggles inline type/parameter annotations |
-| **Code Actions & Fixes** | `Cmd + .` | `Space + a` | Quick fixes, imports, linter actions |
+| **Code Actions & Fixes** | `Cmd + .` | `Cmd + .` *(or `Space + a`)* | Quick fixes, imports, linter actions |
 | **Go to Definition** | `F12` / `Cmd + Click` | `gd` | Jump to definition (`Cmd + Shift + [` returns) |
 | **Find All References** | `Shift + F12` | `gr` | Opens reference list in fuzzy picker |
 | **Project-Wide Rename** | `F2` | `Space + r` | Updates all references; commit with `:wa` |
-| **Next / Prev Diagnostic** | `F8` / `Shift + F8` | `]d` / `[d` | Jump directly to next/previous error |
-| **Toggle Block Comment** | `Option + Shift + A` | `Space + C` | Wraps selection in block comments |
+| **Next / Prev Diagnostic** | `Cmd + E` / `Cmd + Shift + E` | `Cmd + E` / `Cmd + Shift + E` *(or `]d` / `[d`)* | Jump directly to next/previous error |
+| **Multi-Cursor Match Next**| `Cmd + D` | `Cmd + D` | Incrementally select next word occurrence |
+| **Clear Multi-Cursors** | `Esc` | `,` *(comma)* | Collapses back to single primary cursor |
+| **Split Editor Right** | `Cmd + \` | `Cmd + \` *(or `Ctrl + w` → `v`)* | Side-by-side vertical split |
 | **Multi-Cursor Add Below** | `Cmd + Option + ↓` | `C` | Adds cursor to line below |
 | **Multi-Cursor Add Above** | `Cmd + Option + ↑` | `Option + C` *(⌥ + Shift + c)* | Adds cursor to line above |
 | **Multi-Cursor Split Lines**| `Option + Shift + I` | `Option + s` *(⌥ + s)* | Splits selected lines into cursors |
-| **Multi-Cursor Match Next**| `Cmd + D` | `*` → `s` → `Enter` | Select matches across buffer |
-| **Clear Multi-Cursors** | `Esc` | `,` *(comma)* | Collapses back to single primary cursor |
 | **Git Status & Staging** | `Cmd + Shift + G` | `gg` (or Zellij Tab 2) | Interactive staging and diffs |
 | **Switch Editor / Terminal**| `Cmd + J` / `Cmd + ` ` | `Option + Down` / `Option + Up` | Jump between Helix editor and Terminal |
 | **Zoom Active Pane** | `Cmd + Shift + Enter` | `Option + Z` | Maximize focused pane |
@@ -461,6 +468,12 @@ Kitty maps standard macOS `Cmd` shortcuts directly to Helix control codes, dedic
 * `Cmd + W`: Close buffer tab (sends `\x17` → Helix `:buffer-close`).
 * `Cmd + [` / `Cmd + ]`: Move to previous / next buffer tab in Helix.
 * `Cmd + Shift + [` / `Cmd + Shift + ]`: Jump backward / forward across definitions (jumplist).
+* `Cmd + D`: Multi-cursor incremental selection of matching word.
+* `Cmd + .`: Quick fix / Code actions and imports.
+* `Cmd + I`: Hover documentation modal.
+* `Cmd + E` / `Cmd + Shift + E`: Jump to next / previous error or diagnostic.
+* `Cmd + Shift + /`: Toggle block comment.
+* `Cmd + \`: Split editor vertically.
 * `Cmd + S`: Save & format (sends `\x13` → Helix `:write`).
 * `Cmd + Z` / `Cmd + Shift + Z`: Undo / Redo in Normal mode.
 * `Cmd + /`: Toggle line/selection comment in Helix.
